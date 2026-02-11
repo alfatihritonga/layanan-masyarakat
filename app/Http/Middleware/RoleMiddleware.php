@@ -18,11 +18,32 @@ class RoleMiddleware
         $user = $request->user();
 
         if (!$user) {
-            abort(401, 'Unauthorized');
+            // Return JSON for API requests
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthenticated. Please login first.'
+                ], 401);
+            }
+            
+            // Redirect to login for web requests
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu');
         }
 
-        if (! in_array($user->role, $roles)) {
-            abort(403, 'Forbidden');
+        // Check if user has required role
+        if (!in_array($user->role, $roles)) {
+            // Return JSON for API requests
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Forbidden. You do not have permission to access this resource.',
+                    'required_roles' => $roles,
+                    'your_role' => $user->role
+                ], 403);
+            }
+            
+            // Abort for web requests
+            abort(403, 'Anda tidak memiliki akses ke halaman ini');
         }
         
         return $next($request);

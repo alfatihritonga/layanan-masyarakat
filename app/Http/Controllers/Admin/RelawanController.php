@@ -8,9 +8,19 @@ use Illuminate\Http\Request;
 
 class RelawanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $relawans = Relawan::latest()->paginate(10);
+        $relawans = Relawan::query()
+            ->when($request->filled('search'), function ($q) use ($request) {
+                $q->where('nama', 'like', '%' . $request->search . '%');
+            })
+            ->when($request->filled('status'), function ($q) use ($request) {
+                $q->where('status_ketersediaan', $request->status);
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
         return view('admin.relawan.index', compact('relawans'));
     }
 

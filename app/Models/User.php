@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, HasApiTokens, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -22,8 +23,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'google_id',
         'role',
+        'google_id',
+        'avatar',
+        'auth_provider',
+        'email_verified_at',
     ];
 
     /**
@@ -54,32 +58,58 @@ class User extends Authenticatable
      */
     public function initials(): string
     {
-        return Str::of($this->name)
-            ->explode(' ')
-            ->map(fn (string $name) => Str::of($name)->substr(0, 1))
-            ->implode('');
+        $words = explode(' ', $this->name);
+        if (count($words) >= 2) {
+            return strtoupper(substr($words[0], 0, 1) . substr($words[1], 0, 1));
+        }
+        return strtoupper(substr($this->name, 0, 2));
     }
 
     // Helper methods
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
+    }
+
+    public function hasAnyRole(array $roles): bool
+    {
+        return in_array($this->role, $roles);
+    }
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
     }
 
+    public function isGoogleUser(): bool
+    {
+        return $this->auth_provider === 'google';
+    }
+
     // Relasi
-    public function laporan()
+    public function reports()
     {
-        return $this->hasMany(LaporanBencana::class);
+        return $this->hasMany(Report::class);
     }
 
-    public function respon()
+    public function verifiedReports()
     {
-        return $this->hasMany(ResponLaporan::class);
+        return $this->hasMany(Report::class, 'verified_by');
     }
 
-    public function relawan()
+    public function assignments()
     {
-        return $this->hasOne(Relawan::class);
+        return $this->hasMany(Assignment::class, 'assigned_by');
+    }
+
+    public function reportComments()
+    {
+        return $this->hasMany(ReportComment::class);
+    }
+
+    public function reportHistories()
+    {
+        return $this->hasMany(ReportHistory::class, 'changed_by');
     }
 
     // Scope

@@ -16,9 +16,13 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->string('google_id')->nullable();
-            $table->string('role')->default('user');
+            $table->string('password')->nullable();
+            $table->enum('role', ['admin', 'user'])->default('user');
+
+            $table->string('google_id')->nullable()->unique();
+            $table->string('avatar')->nullable();
+            $table->enum('auth_provider', ['email', 'google'])->default('email');
+            
             $table->rememberToken();
             $table->timestamps();
         });

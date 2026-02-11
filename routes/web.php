@@ -1,76 +1,104 @@
 <?php
 
-use App\Http\Controllers\Admin\RelawanController;
-use App\Http\Controllers\Auth\GoogleAuthController;
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\LaporanBencanaController as AdminLaporanBencanaController;
-use App\Http\Controllers\Admin\ResponController;
-use App\Http\Controllers\User\DashboardController as UserDashboardController;
-use App\Http\Controllers\User\LaporanBencanaController;
+use App\Http\Controllers\Web\AuthController;
+use App\Http\Controllers\Web\DashboardController;
+use App\Http\Controllers\Web\RelawanController;
+use App\Http\Controllers\Web\ReportController;
+use App\Http\Controllers\Web\User\ReportController as UserReportController;
 use Illuminate\Support\Facades\Route;
 
+/*
+|--------------------------------------------------------------------------
+| Guest Routes
+|--------------------------------------------------------------------------
+*/
+
+// Route::get('/', function () {
+//     return redirect()->route('login');
+// });
+
 Route::get('/', function () {
-    return view('welcome');
+    if (auth()->check()) {
+        return auth()->user()->isAdmin() 
+            ? redirect()->route('dashboard') 
+            : redirect()->route('user.dashboard');
+    }
+    return redirect()->route('login');
 });
 
-Route::view('/login', 'auth.login')->name('login')->middleware('guest');
-
-Route::middleware(['guest'])->group(function () {
-    Route::get('/auth/google', [GoogleAuthController::class, 'redirectToGoogle'])
-        ->name('auth.google.redirect');
-    Route::get('/auth/google/callback', [GoogleAuthController::class, 'handleGoogleCallback'])
-        ->name('auth.google.callback');
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    
+    // OAuth Routes
+    Route::get('/auth/google', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
+    Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 });
 
-Route::post('logout', [GoogleAuthController::class, 'logout'])
-    ->name('logout');
+/*
+|--------------------------------------------------------------------------
+| Authenticated Routes - User (Masyarakat)
+|--------------------------------------------------------------------------
+*/
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'role:user'])->prefix('my')->name('user.')->group(function () {
+    // Logout
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    Route::middleware('role:admin')
-        ->prefix('admin')
-        ->name('admin.')
-        ->group(function () {
-
-        Route::get('/dashboard', [AdminDashboardController::class, 'index'])
-            ->name('dashboard');
-
-        Route::get('/laporan', [AdminLaporanBencanaController::class, 'index'])
-            ->name('laporan.index');
-
-        Route::get('/laporan/{laporan}', [AdminLaporanBencanaController::class, 'show'])
-            ->name('laporan.show');
-
-        Route::patch('/laporan/{laporan}/verifikasi', [AdminLaporanBencanaController::class, 'verifikasi'])
-            ->name('laporan.verifikasi');
-
-        Route::post('/laporan/{laporan}/respon', [AdminLaporanBencanaController::class, 'respon'])
-            ->name('laporan.respon');
+    // Dashboard
+    Route::get('/dashboard', [\App\Http\Controllers\Web\User\DashboardController::class, 'index'])->name('dashboard');
+    
+    // User Reports
+    Route::prefix('reports')->name('reports.')->group(function () {
+        Route::get('/', [UserReportController::class, 'index'])->name('index');
+        Route::get('/create', [UserReportController::class, 'create'])->name('create');
+        Route::post('/', [UserReportController::class, 'store'])->name('store');
+        Route::get('/{id}', [UserReportController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [UserReportController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [UserReportController::class, 'update'])->name('update');
+        Route::delete('/{id}', [UserReportController::class, 'destroy'])->name('destroy');
         
-        Route::post('/respon/{respon}/assign-relawan', [ResponController::class, 'assignRelawan'])
-            ->name('respon.assign-relawan');
-
-        Route::resource('relawan', RelawanController::class)->except('show');
+        // Attachments
+        Route::post('/{id}/attachments', [UserReportController::class, 'addAttachment'])->name('addAttachment');
+        Route::delete('/{reportId}/attachments/{attachmentId}', [UserReportController::class, 'deleteAttachment'])->name('deleteAttachment');
+        
+        // Comments
+        Route::post('/{id}/comments', [UserReportController::class, 'addComment'])->name('addComment');
     });
+});
 
-    Route::middleware('role:user')
-        ->prefix('user')
-        ->name('user.')
-        ->group(function () {
+/*
+|--------------------------------------------------------------------------
+| Authenticated Routes (Admin Only)
+|--------------------------------------------------------------------------
+*/
 
-        Route::get('/dashboard', [UserDashboardController::class, 'index'])
-            ->name('dashboard');
-
-        Route::get('/laporan/index', [LaporanBencanaController::class, 'index'])
-            ->name('laporan.index');
-
-        Route::get('/laporan/create', [LaporanBencanaController::class, 'create'])
-            ->name('laporan.create');
-
-        Route::get('/laporan/{laporan}/show', [LaporanBencanaController::class, 'show'])
-            ->name('laporan.show');
-
-        Route::post('/laporan', [LaporanBencanaController::class, 'store'])
-            ->name('laporan.store');
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Reports
+    Route::prefix('reports')->name('reports.')->group(function () {
+        Route::get('/', [ReportController::class, 'index'])->name('index');
+        Route::get('/{id}', [ReportController::class, 'show'])->name('show');
+        
+        // Actions
+        Route::post('/{id}/verify', [ReportController::class, 'verify'])->name('verify');
+        Route::post('/{id}/reject', [ReportController::class, 'reject'])->name('reject');
+        Route::post('/{id}/update-urgency', [ReportController::class, 'updateUrgency'])->name('updateUrgency');
+        Route::post('/{id}/assign', [ReportController::class, 'assign'])->name('assign');
+        Route::post('/{id}/resolve', [ReportController::class, 'resolve'])->name('resolve');
+        
+        // Assignment actions
+        Route::post('/{reportId}/assignments/{assignmentId}/update-status', [ReportController::class, 'updateAssignmentStatus'])->name('updateAssignmentStatus');
+        Route::post('/{reportId}/assignments/{assignmentId}/complete', [ReportController::class, 'completeAssignment'])->name('completeAssignment');
+        
+        // Comments
+        Route::post('/{id}/comments', [ReportController::class, 'addComment'])->name('addComment');
     });
+    
+    // Relawan
+    Route::resource('relawan', RelawanController::class);
 });

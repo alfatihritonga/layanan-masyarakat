@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class Relawan extends Model
 {
-    use HasFactory, SoftDeletes;
+    use SoftDeletes;
 
     protected $table = 'relawan';
 
@@ -22,37 +22,102 @@ class Relawan extends Model
         'status_ketersediaan',
         'skill',
         'tahun_bergabung',
-        'user_id',
     ];
 
     protected $casts = [
-        'skill'                  => 'array',
-        'status_ketersediaan'    => 'string',
-        'tahun_bergabung'        => 'integer',
+        'skill' => 'array',
+        'tahun_bergabung' => 'integer',
     ];
 
-    // Relasi
-    public function user()
+    /* ==========================================================
+     |  RELATIONS
+     |==========================================================*/
+    public function assignments()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(Assignment::class);
     }
 
-    public function respon()
+    public function activeAssignments()
     {
-        return $this->belongsToMany(ResponLaporan::class, 'relawan_respon')
-                    ->withPivot('peran')
-                    ->withTimestamps();
+        return $this->hasMany(Assignment::class)->active();
     }
 
-    // Scopes
-    public function scopeAvailable($query)
+    /* ==========================================================
+     |  QUERY SCOPES
+     |==========================================================*/
+
+    public function scopeAvailable(Builder $query)
     {
         return $query->where('status_ketersediaan', 'available');
     }
-    
-    public function scopeOnDuty($q)
+
+    public function scopeOnDuty(Builder $query)
     {
-        return $q->where('status_ketersediaan', 'on_duty');
+        return $query->where('status_ketersediaan', 'on_duty');
     }
 
+    public function scopeByKabupaten(Builder $query, string $kabupaten)
+    {
+        return $query->where('kabupaten_kota', $kabupaten);
+    }
+
+    public function scopePublic(Builder $query)
+    {
+        return $query
+            ->where('status_ketersediaan', '!=', 'unavailable')
+            ->latest();
+    }
+
+    public function scopeSearch($query, $search)
+    {
+        return $query->where(function ($q) use ($search) {
+            $q->where('nama', 'like', "%{$search}%")
+              ->orWhere('email', 'like', "%{$search}%")
+              ->orWhere('no_hp', 'like', "%{$search}%");
+        });
+    }
+
+    /* ==========================================================
+     |  ATTRIBUTE / HELPER
+     |==========================================================*/
+
+    public function getMasaKerjaAttribute(): int
+    {
+        return now()->year - $this->tahun_bergabung;
+    }
+
+    public function isAvailable(): bool
+    {
+        return $this->status_ketersediaan === 'available';
+    }
+
+    public function hasSkill(string $skill): bool
+    {
+        return in_array($skill, $this->skill ?? []);
+    }
+
+    /* ==========================================================
+     |  DOMAIN LOGIC
+     |==========================================================*/
+
+    public function setOnDuty(): void
+    {
+        $this->update([
+            'status_ketersediaan' => 'on_duty'
+        ]);
+    }
+
+    public function setAvailable(): void
+    {
+        $this->update([
+            'status_ketersediaan' => 'available'
+        ]);
+    }
+
+    public function setUnavailable(): void
+    {
+        $this->update([
+            'status_ketersediaan' => 'unavailable'
+        ]);
+    }
 }
