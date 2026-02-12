@@ -31,6 +31,7 @@ class StoreRelawanRequest extends FormRequest
             'status_ketersediaan' => 'required|in:available,on_duty,unavailable',
             'skill' => 'nullable|array',
             'skill.*' => 'string',
+            'skill_manual' => 'nullable|string|max:255',
             'tahun_bergabung' => 'required|integer|min:2000|max:' . date('Y'),
         ];
     }

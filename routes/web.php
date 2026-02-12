@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\DashboardController;
+use App\Http\Controllers\Web\DisasterTypeController;
+use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\RelawanController;
 use App\Http\Controllers\Web\ReportController;
 use App\Http\Controllers\Web\User\ReportController as UserReportController;
@@ -13,18 +15,15 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Route::get('/', function () {
-//     return redirect()->route('login');
-// });
+Route::get('/', [HomeController::class, 'index'])->name('welcome');
 
-Route::get('/', function () {
-    if (auth()->check()) {
-        return auth()->user()->isAdmin() 
-            ? redirect()->route('dashboard') 
-            : redirect()->route('user.dashboard');
-    }
-    return redirect()->route('login');
-});
+Route::get('/home', function () {
+    return redirect()->route('welcome');
+})->name('home');
+
+Route::get('/h', function () {
+    return redirect()->route('welcome');
+})->name('home.short');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -101,4 +100,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     
     // Relawan
     Route::resource('relawan', RelawanController::class);
+
+    // Disaster Types
+    Route::resource('disaster-types', DisasterTypeController::class);
 });

@@ -43,6 +43,15 @@
                     Data Relawan
                 </a>
             </li>
+
+            <li>
+                <a href="{{ route('disaster-types.index') }}" class="{{ Route::is('disaster-types.*') ? 'active' : '' }}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" class="size-4">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7.75 3.75h8.5a2 2 0 0 1 2 2v12.5a2 2 0 0 1-2 2h-8.5a2 2 0 0 1-2-2V5.75a2 2 0 0 1 2-2Zm0 4h8.5m-8.5 4h8.5m-8.5 4h5.5"></path>
+                    </svg>
+                    Jenis Bencana
+                </a>
+            </li>
         </ul>
     </aside>
 </div>

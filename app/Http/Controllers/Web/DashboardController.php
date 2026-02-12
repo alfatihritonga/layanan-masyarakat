@@ -22,7 +22,6 @@ class DashboardController extends Controller
             'reports' => $reportStatistics,
             'relawan' => $relawanStatistics,
         ];
-        // return response()->json($statistics);
 
         return view('dashboard', compact('statistics'));
     }

@@ -9,9 +9,9 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
-<body class="min-h-screen bg-base-200">
+<body class="min-h-screen bg-base-100 text-base-content antialiased">
     @yield('content')
-    
+
     @stack('scripts')
 </body>
 </html>

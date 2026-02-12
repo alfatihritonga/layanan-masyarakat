@@ -467,6 +467,72 @@ class ReportService
     }
 
     /**
+     * Get landing page overview
+     */
+    public function getLandingOverview(): array
+    {
+        $stats = $this->getStatistics();
+        $activeReports = ($stats['pending'] ?? 0) + ($stats['in_progress'] ?? 0);
+
+        $yearlyTrend = Report::query()
+            ->selectRaw('YEAR(incident_date) as year, COUNT(*) as total')
+            ->whereNotNull('incident_date')
+            ->groupBy('year')
+            ->orderBy('year')
+            ->get();
+
+        $yearlyYears = $yearlyTrend->pluck('year')->map(fn ($year) => (int) $year)->values();
+        $yearlyTotals = $yearlyTrend->pluck('total')->map(fn ($total) => (int) $total)->values();
+        $yearlyMax = $yearlyTotals->max() ?? 0;
+        $yearStart = $yearlyYears->min() ?? now()->year;
+        $yearEnd = $yearlyYears->max() ?? now()->year;
+
+        $dominantByYear = Report::query()
+            ->selectRaw('YEAR(incident_date) as year, disaster_types.name as type, COUNT(*) as total')
+            ->join('disaster_types', 'disaster_types.id', '=', 'reports.disaster_type_id')
+            ->whereNotNull('incident_date')
+            ->groupBy('year', 'reports.disaster_type_id', 'disaster_types.name')
+            ->orderBy('year', 'desc')
+            ->get()
+            ->groupBy('year')
+            ->map(function ($rows) {
+                $dominant = $rows->sortByDesc('total')->first();
+                $yearTotal = $rows->sum('total');
+
+                return [
+                    'year' => (int) $dominant->year,
+                    'total' => (int) $yearTotal,
+                    'dominant_type' => $dominant->type,
+                ];
+            })
+            ->values()
+            ->all();
+
+        return [
+            'reports' => [
+                'total' => $stats['total'] ?? 0,
+                'in_progress' => $stats['in_progress'] ?? 0,
+                'resolved' => $stats['resolved'] ?? 0,
+                'active' => $activeReports,
+            ],
+            'year_range' => [
+                'start' => (int) $yearStart,
+                'end' => (int) $yearEnd,
+            ],
+            'trend' => [
+                'years' => $yearlyYears->all(),
+                'totals' => $yearlyTotals->all(),
+                'max' => (int) $yearlyMax,
+            ],
+            'top_disaster_types' => collect($stats['by_disaster_type'] ?? [])
+                ->sortByDesc('total')
+                ->take(4)
+                ->values(),
+            'table' => $dominantByYear,
+        ];
+    }
+
+    /**
      * Handle multiple file attachments
      */
     private function handleAttachments(Report $report, array $files): void

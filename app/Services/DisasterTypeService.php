@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\DisasterType;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class DisasterTypeService
 {
@@ -13,6 +14,24 @@ class DisasterTypeService
     public function getAll(): Collection
     {
         return DisasterType::orderBy('name')->get();
+    }
+
+    /**
+     * Get paginated disaster types with filters
+     */
+    public function getAllPaginated(array $filters = [], int $perPage = 15): LengthAwarePaginator
+    {
+        $query = DisasterType::query();
+
+        if (!empty($filters['search'])) {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        return $query->orderBy('name')->paginate($perPage);
     }
 
     /**

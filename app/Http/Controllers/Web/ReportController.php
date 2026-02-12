@@ -43,11 +43,6 @@ class ReportController extends Controller
         $reports = $this->reportService->getAllPaginated($filters, 10);
         $disasterTypes = $this->disasterTypeService->getAll();
 
-        // return response()->json([
-        //     'reports' => $reports,
-        //     'disasterTypes' => $disasterTypes,
-        //     'filters' => $filters
-        // ]);
         return view('reports.index', compact('reports', 'disasterTypes', 'filters'));
     }
 
@@ -57,12 +52,11 @@ class ReportController extends Controller
     public function show(int $id)
     {
         $report = $this->reportService->findById($id);
-
         if (!$report) {
             abort(404, 'Laporan tidak ditemukan');
         }
 
-        $availableRelawan = $this->relawanService->getAll(['status' => 'available']);
+        $availableRelawan = $this->relawanService->getAll()->where('status_ketersediaan', 'available');
         $comments = $this->commentService->getByReport($id, true); // include internal
 
         return view('reports.show', compact('report', 'availableRelawan', 'comments'));

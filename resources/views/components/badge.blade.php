@@ -37,5 +37,6 @@
 @endphp
 
 <span {{ $attributes->merge(['class' => $classes]) }}>
+    {{-- <span class="status"></span> --}}
     {{ $displayText }}
 </span>

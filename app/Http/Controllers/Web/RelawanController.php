@@ -19,21 +19,51 @@ class RelawanController extends Controller
         $filters = $request->only(['search', 'status', 'kabupaten', 'tahun']);
         $relawan = $this->relawanService->getAllPaginated($filters, 10);
 
-        return view('admin.relawan.index', compact('relawan', 'filters'));
+        return view('relawan.index', compact('relawan', 'filters'));
     }
 
     public function create()
     {
-        return view('admin.relawan.create');
+        return view('relawan.create');
     }
 
     public function store(StoreRelawanRequest $request)
     {
-        $this->relawanService->create($request->validated());
+        $data = $request->validated();
+        $manualSkills = collect(explode(',', $data['skill_manual'] ?? ''))
+            ->map(fn ($skill) => trim($skill))
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+
+        $skills = array_values(array_unique(array_merge($data['skill'] ?? [], $manualSkills)));
+        $data['skill'] = $skills ?: null;
+        unset($data['skill_manual']);
+
+        $this->relawanService->create($data);
 
         return redirect()
-            ->route('admin.relawan.index')
+            ->route('relawan.index')
             ->with('success', 'Relawan berhasil ditambahkan');
+    }
+
+    public function show(int $id)
+    {
+        $relawan = $this->relawanService->findById($id);
+
+        if (!$relawan) {
+            abort(404, 'Relawan tidak ditemukan');
+        }
+
+        $relawan->load([
+            'assignments' => fn ($query) => $query
+                ->with(['report.disasterType', 'assigner'])
+                ->latest('assigned_at')
+                ->latest('created_at'),
+        ]);
+
+        return view('relawan.show', compact('relawan'));
     }
 
     public function edit(int $id)
@@ -44,7 +74,7 @@ class RelawanController extends Controller
             abort(404, 'Relawan tidak ditemukan');
         }
 
-        return view('admin.relawan.edit', compact('relawan'));
+        return view('relawan.edit', compact('relawan'));
     }
 
     public function update(UpdateRelawanRequest $request, int $id)
@@ -56,7 +86,7 @@ class RelawanController extends Controller
         }
 
         return redirect()
-            ->route('admin.relawan.index')
+            ->route('relawan.index')
             ->with('success', 'Relawan berhasil diupdate');
     }
 
@@ -69,7 +99,7 @@ class RelawanController extends Controller
         }
 
         return redirect()
-            ->route('admin.relawan.index')
+            ->route('relawan.index')
             ->with('success', 'Relawan berhasil dihapus');
     }
 }

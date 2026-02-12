@@ -101,8 +101,8 @@ class AuthController extends Controller
         $user = auth()->user();
 
         return match ($user->role) {
-            'admin' => redirect()->intended(route('dashboard', absolute: false))->with('success', 'Welcome Back, ' . $user->name . '!'),
-            'user'  => redirect()->intended(route('user.dashboard', absolute: false))->with('success', 'Welcome Back, ' . $user->name . '!'),
+            'admin' => redirect()->intended(route('dashboard', absolute: false)),
+            'user'  => redirect()->intended(route('user.dashboard', absolute: false)),
             default => abort(403),
         };
     }

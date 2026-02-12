@@ -35,7 +35,7 @@
     <div class="card bg-base-100 shadow-lg">
         <div class="card-body">
             <!-- Header Info -->
-            <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 pb-4 border-b">
+            <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 pb-4 border-b border-base-content/10">
                 <div class="flex-1">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="text-sm text-gray-500">Laporan #{{ $report->id }}</span>
@@ -43,7 +43,9 @@
                         <span class="text-sm text-gray-500">{{ $report->created_at->format('d M Y, H:i') }}</span>
                     </div>
                     <div class="flex items-center gap-3 mb-3">
-                        <div class="w-4 h-4 rounded-full" style="background-color: {{ $report->disasterType->color ?? '#888' }}"></div>
+                        <div class="w-3 h-3 rounded-full" style="background-color: {{ $report->disasterType->color ?? '#888' }}">
+                            
+                        </div>
                         <h1 class="text-2xl font-bold">{{ $report->disasterType->name }}</h1>
                     </div>
                     <div class="flex flex-wrap gap-2">
@@ -82,23 +84,19 @@
                 <!-- Left Column -->
                 <div class="space-y-4">
                     <div>
-                        <label class="text-sm font-semibold text-gray-500">Deskripsi Kejadian</label>
+                        <label class="text-xs font-semibold text-gray-500">Deskripsi Kejadian</label>
                         <p class="mt-1 text-base">{{ $report->description }}</p>
                     </div>
 
                     <div>
-                        <label class="text-sm font-semibold text-gray-500">Lokasi Kejadian</label>
-                        <p class="mt-1 text-base flex items-start gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-error mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            <span>{{ $report->location_address }}</span>
+                        <label class="text-xs font-semibold text-gray-500">Lokasi Kejadian</label>
+                        <p class="mt-1 text-base">
+                            {{ $report->location_address }}
                         </p>
                     </div>
 
                     <div>
-                        <label class="text-sm font-semibold text-gray-500">Waktu Kejadian</label>
+                        <label class="text-xs font-semibold text-gray-500">Waktu Kejadian</label>
                         <p class="mt-1 text-base">{{ $report->incident_date->format('d F Y, H:i') }} WIB</p>
                     </div>
                 </div>
@@ -107,25 +105,25 @@
                 <div class="space-y-4">
                     @if($report->victim_count)
                     <div>
-                        <label class="text-sm font-semibold text-gray-500">Jumlah Korban</label>
+                        <label class="text-xs font-semibold text-gray-500">Jumlah Korban</label>
                         <p class="mt-1 text-base">{{ $report->victim_count }} orang</p>
                     </div>
                     @endif
 
                     @if($report->damage_description)
                     <div>
-                        <label class="text-sm font-semibold text-gray-500">Deskripsi Kerusakan</label>
+                        <label class="text-xs font-semibold text-gray-500">Deskripsi Kerusakan</label>
                         <p class="mt-1 text-base">{{ $report->damage_description }}</p>
                     </div>
                     @endif
 
                     <div>
-                        <label class="text-sm font-semibold text-gray-500">Kontak yang Dapat Dihubungi</label>
+                        <label class="text-xs font-semibold text-gray-500">Kontak yang Dapat Dihubungi</label>
                         <p class="mt-1 text-base">{{ $report->contact_phone }}</p>
                     </div>
 
                     <div>
-                        <label class="text-sm font-semibold text-gray-500">Dilaporkan</label>
+                        <label class="text-xs font-semibold text-gray-500">Dilaporkan</label>
                         <p class="mt-1 text-base">{{ $report->created_at->diffForHumans() }}</p>
                     </div>
                 </div>
@@ -133,7 +131,7 @@
 
             <!-- Attachments -->
             @if($report->attachments->count() > 0)
-            <div class="border-t pt-6">
+            <div class="pt-6 border-t border-base-content/10">
                 <h3 class="text-lg font-semibold mb-4">Lampiran ({{ $report->attachments->count() }})</h3>
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     @foreach($report->attachments as $attachment)
@@ -183,7 +181,7 @@
 
             <!-- Assignments (if any) -->
             @if($report->assignments->count() > 0)
-            <div class="border-t pt-6">
+            <div class="pt-6 border-t border-base-content/10">
                 <h3 class="text-lg font-semibold mb-4">Tim Penanganan</h3>
                 <div class="space-y-3">
                     @foreach($report->assignments as $assignment)
@@ -192,7 +190,7 @@
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-3">
                                     <div class="avatar placeholder">
-                                        <div class="bg-neutral text-neutral-content rounded-full w-12">
+                                        <div class="bg-neutral text-neutral-content rounded-full w-12 flex items-center justify-center">
                                             <span class="text-xl">{{ substr($assignment->relawan->nama, 0, 1) }}</span>
                                         </div>
                                     </div>
@@ -240,69 +238,69 @@
 
     <!-- Comments Section -->
     <div class="card bg-base-100 shadow-lg">
+        <div class="card-title px-5 py-3 border-b border-base-content/10">
+            <h2 class="text-lg font-semibold">Diskusi Laporan</h2>
+        </div>
         <div class="card-body">
-            <h3 class="text-lg font-semibold mb-4">Komentar & Update</h3>
-
-            <!-- Add Comment Form -->
-            <form method="POST" action="{{ route('user.reports.addComment', $report->id) }}" class="mb-6">
-                @csrf
-                <div class="form-control">
-                    <textarea name="comment" 
-                              rows="3" 
-                              class="textarea textarea-bordered" 
-                              placeholder="Tulis komentar atau pertanyaan..."
-                              required></textarea>
-                </div>
-                <div class="flex justify-end mt-2">
-                    <button type="submit" class="btn btn-primary btn-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                        </svg>
-                        Kirim
-                    </button>
-                </div>
-            </form>
-
-            <!-- Comments List -->
-            @if($comments->count() > 0)
-            <div class="space-y-4">
-                @foreach($comments as $comment)
-                <div class="flex gap-3 {{ $comment->user_id === auth()->id() ? 'flex-row-reverse' : '' }}">
-                    <div class="avatar placeholder">
-                        <div class="bg-neutral text-neutral-content rounded-full w-10">
-                            @if($comment->user->avatar)
-                            <img src="{{ $comment->user->avatar }}" alt="{{ $comment->user->name }}">
-                            @else
-                            <span class="text-sm">{{ $comment->user->initials() }}</span>
-                            @endif
-                        </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Add Comment Form -->
+                <form method="POST" action="{{ route('user.reports.addComment', $report->id) }}" class="order-2 md:order-1">
+                    @csrf
+                    <div class="flex flex-col gap-2">
+                        <label for="comment" class="font-semibold">Komentar</label>
+                        <textarea id="comment" name="comment" rows="3" class="textarea textarea-bordered w-full" placeholder="Tulis komentar atau pertanyaan..." required></textarea>
                     </div>
-                    <div class="flex-1 {{ $comment->user_id === auth()->id() ? 'text-right' : '' }}">
-                        <div class="inline-block {{ $comment->user_id === auth()->id() ? 'bg-primary text-primary-content' : 'bg-base-200' }} rounded-lg px-4 py-2 max-w-lg">
-                            <div class="font-semibold text-sm">{{ $comment->user->name }}</div>
-                            <p class="text-sm mt-1">{{ $comment->comment }}</p>
-                        </div>
-                        <div class="text-xs text-gray-500 mt-1">{{ $comment->created_at->diffForHumans() }}</div>
+                    <div class="flex justify-end mt-2">
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" class="intentui-icons size-4" data-slot="icon" aria-hidden="true"><path stroke="currentColor" stroke-linejoin="round" stroke-width="1.5" d="M9 11.75 1.966 5.497c-.687-.61-.255-1.747.664-1.747h18.65a1 1 0 0 1 .868 1.495l-9.146 16.039c-.45.79-1.636.617-1.843-.269zm0 0L22.586 4"></path></svg>
+                            Kirim
+                        </button>
                     </div>
+                </form>
+
+                <!-- Comments List -->
+                <div class="order-1 md:order-2">
+                    @if($comments->count() > 0)
+                    <div class="space-y-4 bg-base-300 p-4 rounded max-h-96 overflow-y-auto">
+                        @foreach($comments as $comment)
+                        <div class="flex gap-3 {{ $comment->user_id === auth()->id() ? 'flex-row-reverse' : '' }}">
+                            <div class="avatar placeholder">
+                                <div class="bg-neutral text-neutral-content rounded-full w-10 h-10 flex items-center justify-center">
+                                    @if($comment->user->avatar)
+                                    <img src="{{ $comment->user->avatar }}" alt="{{ $comment->user->name }}">
+                                    @else
+                                    <span class="text-sm">{{ $comment->user->initials() }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="flex-1 {{ $comment->user_id === auth()->id() ? 'text-right' : '' }}">
+                                <div class="inline-block {{ $comment->user_id === auth()->id() ? 'bg-primary text-primary-content' : 'bg-base-200' }} rounded-lg px-4 py-2 max-w-lg">
+                                    <div class="font-semibold text-sm">{{ $comment->user->name }}</div>
+                                    <p class="text-sm mt-1">{{ $comment->comment }}</p>
+                                </div>
+                                <div class="text-xs text-gray-500 mt-1">{{ $comment->created_at->diffForHumans() }}</div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                    @else
+                    <div class="text-center py-8 text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" class="intentui-icons h-12 w-12 mx-auto mb-2 opacity-50" data-slot="icon" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.25 14.25h3.002a1 1 0 0 0 1-1v-8.5a1 1 0 0 0-1-1H8.002a1 1 0 0 0-1 1v3m9.25 0h-12.5a1 1 0 0 0-1 1v8.5a1 1 0 0 0 1 1h2.25v2.5l4.5-2.5h5.75a1 1 0 0 0 1-1v-8.5a1 1 0 0 0-1-1"></path></svg>
+                        <p>Belum ada komentar</p>
+                    </div>
+                    @endif
                 </div>
-                @endforeach
             </div>
-            @else
-            <div class="text-center py-8 text-gray-500">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-                <p>Belum ada komentar</p>
-            </div>
-            @endif
         </div>
     </div>
 
     <!-- Timeline/History -->
     @if($report->histories->count() > 0)
     <div class="card bg-base-100 shadow-lg">
+        <div class="card-title px-5 py-3 border-b border-base-content/10">
+            <h2 class="text-lg font-semibold">Riwayat Perubahan</h2>
+        </div>
         <div class="card-body">
-            <h3 class="text-lg font-semibold mb-4">Riwayat Perubahan</h3>
             <ul class="timeline timeline-vertical">
                 @foreach($report->histories as $history)
                 <li>

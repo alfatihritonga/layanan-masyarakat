@@ -10,11 +10,16 @@
     
     <!-- Brand -->
     <div class="flex-1">
-        <a href="{{ route('user.reports.index') }}" class="btn btn-ghost text-xl normal-case">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            <span class="hidden sm:inline ml-2">SIGAP BENCANA</span>
+        <a href="#" class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-primary/80">
+                <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12.356 3.066a1 1 0 0 0-.712 0l-7 2.666A1 1 0 0 0 4 6.68a17.695 17.695 0 0 0 2.022 7.98 17.405 17.405 0 0 0 5.403 6.158 1 1 0 0 0 1.15 0 17.406 17.406 0 0 0 5.402-6.157A17.694 17.694 0 0 0 20 6.68a1 1 0 0 0-.644-.949l-7-2.666Z"/>
+                </svg>
+            </div>
+            <div class="hidden sm:block">
+                <span class="font-bold tracking-wide text-sm sm:text-base">SIGAP BENCANA</span>
+                <span class="block text-xs font-medium -mt-1 opacity-60">Sistem Informasi Tanggap Bencana</span>
+            </div>
         </a>
     </div>
     
