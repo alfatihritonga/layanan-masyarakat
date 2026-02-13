@@ -3,7 +3,7 @@
 @section('title', 'Detail Laporan #' . $report->id)
 
 @section('content')
-<div class="space-y-6">
+<div class="max-w-5xl mx-auto space-y-6">
     <!-- Back Button & Quick Actions -->
     <div class="flex items-center justify-between">
         <a href="{{ route('reports.index') }}" class="btn btn-ghost btn-sm">
@@ -60,7 +60,7 @@
     <div class="card bg-base-100 shadow-lg">
         <div class="card-body">
             <!-- Header -->
-            <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 pb-4 border-b">
+            <div class="flex flex-col md:flex-row md:items-start justify-between gap-4 pb-4 border-b border-base-content/10">
                 <div class="flex-1">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="text-sm text-gray-500">Laporan #{{ $report->id }}</span>
@@ -68,7 +68,7 @@
                         <span class="text-sm text-gray-500">{{ $report->created_at->format('d M Y, H:i') }} WIB</span>
                     </div>
                     <div class="flex items-center gap-3 mb-3">
-                        <div class="w-4 h-4 rounded-full" style="background-color: {{ $report->disasterType->color ?? '#888' }}"></div>
+                        <div class="w-3 h-3 rounded-full" style="background-color: {{ $report->disasterType->color ?? '#888' }}"></div>
                         <h1 class="text-2xl font-bold">{{ $report->disasterType->name }}</h1>
                     </div>
                     <div class="flex flex-wrap gap-2">
@@ -122,10 +122,10 @@
                 <!-- Left Column -->
                 <div class="space-y-4">
                     <div>
-                        <label class="text-sm font-semibold text-gray-500">Pelapor</label>
+                        <label class="text-xs font-semibold text-gray-500">Pelapor</label>
                         <div class="mt-1 flex items-center gap-3">
                             <div class="avatar placeholder">
-                                <div class="bg-neutral text-neutral-content rounded-full w-12">
+                                <div class="bg-neutral text-neutral-content rounded-full w-12 flex justify-center items-center">
                                     @if($report->user->avatar)
                                     <img src="{{ $report->user->avatar }}" alt="{{ $report->user->name }}">
                                     @else
@@ -141,23 +141,19 @@
                     </div>
 
                     <div>
-                        <label class="text-sm font-semibold text-gray-500">Deskripsi Kejadian</label>
+                        <label class="text-xs font-semibold text-gray-500">Deskripsi Kejadian</label>
                         <p class="mt-1 text-base">{{ $report->description }}</p>
                     </div>
 
                     <div>
-                        <label class="text-sm font-semibold text-gray-500">Lokasi Kejadian</label>
-                        <p class="mt-1 text-base flex items-start gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-error mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
+                        <label class="text-xs font-semibold text-gray-500">Lokasi Kejadian</label>
+                        <p class="mt-1 text-base">
                             <span>{{ $report->location_address }}</span>
                         </p>
                     </div>
 
                     <div>
-                        <label class="text-sm font-semibold text-gray-500">Waktu Kejadian</label>
+                        <label class="text-xs font-semibold text-gray-500">Waktu Kejadian</label>
                         <p class="mt-1 text-base">{{ $report->incident_date->format('d F Y, H:i') }} WIB</p>
                     </div>
                 </div>
@@ -166,20 +162,20 @@
                 <div class="space-y-4">
                     @if($report->victim_count)
                     <div>
-                        <label class="text-sm font-semibold text-gray-500">Jumlah Korban</label>
+                        <label class="text-xs font-semibold text-gray-500">Jumlah Korban</label>
                         <p class="mt-1 text-base font-semibold text-error">{{ $report->victim_count }} orang</p>
                     </div>
                     @endif
 
                     @if($report->damage_description)
                     <div>
-                        <label class="text-sm font-semibold text-gray-500">Deskripsi Kerusakan</label>
+                        <label class="text-xs font-semibold text-gray-500">Deskripsi Kerusakan</label>
                         <p class="mt-1 text-base">{{ $report->damage_description }}</p>
                     </div>
                     @endif
 
                     <div>
-                        <label class="text-sm font-semibold text-gray-500">Kontak yang Dapat Dihubungi</label>
+                        <label class="text-xs font-semibold text-gray-500">Kontak yang Dapat Dihubungi</label>
                         <p class="mt-1 text-base">
                             <a href="tel:{{ $report->contact_phone }}" class="link link-primary">{{ $report->contact_phone }}</a>
                         </p>
@@ -187,7 +183,7 @@
 
                     @if($report->admin_notes)
                     <div>
-                        <label class="text-sm font-semibold text-gray-500">Catatan Admin</label>
+                        <label class="text-xs font-semibold text-gray-500">Catatan Admin</label>
                         <div class="mt-1 p-3 bg-base-200 rounded-lg">
                             <p class="text-sm">{{ $report->admin_notes }}</p>
                         </div>
@@ -195,7 +191,7 @@
                     @endif
 
                     <div>
-                        <label class="text-sm font-semibold text-gray-500">Dilaporkan</label>
+                        <label class="text-xs font-semibold text-gray-500">Dilaporkan</label>
                         <p class="mt-1 text-base">{{ $report->created_at->diffForHumans() }}</p>
                         <p class="text-sm text-gray-500">{{ $report->created_at->format('d F Y, H:i:s') }}</p>
                     </div>
@@ -204,7 +200,7 @@
 
             <!-- Attachments -->
             @if($report->attachments->count() > 0)
-            <div class="border-t pt-6">
+            <div class="border-t border-base-content/10 pt-6">
                 <h3 class="text-lg font-semibold mb-4">Lampiran ({{ $report->attachments->count() }})</h3>
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     @foreach($report->attachments as $attachment)
@@ -259,7 +255,7 @@
                             <!-- Relawan Info -->
                             <div class="flex items-center gap-3 flex-1">
                                 <div class="avatar placeholder">
-                                    <div class="bg-neutral text-neutral-content rounded-full w-14">
+                                    <div class="bg-neutral text-neutral-content rounded-full w-14 flex items-center justify-center">
                                         <span class="text-xl">{{ substr($assignment->relawan->nama, 0, 1) }}</span>
                                     </div>
                                 </div>
@@ -335,7 +331,7 @@
 
                         <!-- Notes -->
                         @if($assignment->notes)
-                        <div class="mt-3 pt-3 border-t">
+                        <div class="mt-3 pt-3 border-t border-base-content/10">
                             <div class="text-sm">
                                 <span class="font-semibold">Catatan Penugasan:</span>
                                 <p class="text-gray-600 mt-1">{{ $assignment->notes }}</p>
@@ -368,15 +364,13 @@
                         <form method="POST" action="{{ route('reports.completeAssignment', [$report->id, $assignment->id]) }}">
                             @csrf
                             <div class="py-4">
-                                <div class="form-control">
-                                    <label class="label">
-                                        <span class="label-text">Laporan Penyelesaian <span class="text-error">*</span></span>
-                                    </label>
-                                    <textarea name="completion_notes" rows="4" class="textarea textarea-bordered" placeholder="Jelaskan hasil penanganan dan tindakan yang telah dilakukan..." required></textarea>
+                                <div class="flex flex-col gap-2">
+                                    <label class="text-sm font-semibold">Laporan Penyelesaian <span class="text-red-500">*</span></label>
+                                    <textarea name="completion_notes" rows="4" class="textarea w-full bg-base-200" placeholder="Jelaskan hasil penanganan dan tindakan yang telah dilakukan..." required></textarea>
                                 </div>
                             </div>
                             <div class="modal-action">
-                                <button type="button" class="btn" onclick="complete_assignment_{{ $assignment->id }}.close()">Batal</button>
+                                <button type="button" class="btn btn-ghost" onclick="complete_assignment_{{ $assignment->id }}.close()">Batal</button>
                                 <button type="submit" class="btn btn-success">Selesai</button>
                             </div>
                         </form>
@@ -404,83 +398,83 @@
 
     <!-- Comments & Communication -->
     <div class="card bg-base-100 shadow-lg">
+        <div class="card-title px-5 py-3 border-b border-base-content/10">
+            <h2 class="text-lg font-semibold">Komentar & Komunikasi</h2>
+        </div>
         <div class="card-body">
-            <h3 class="text-lg font-semibold mb-4">Komentar & Komunikasi</h3>
-
-            <!-- Add Comment Form -->
-            <form method="POST" action="{{ route('reports.addComment', $report->id) }}" class="mb-6">
-                @csrf
-                <div class="form-control">
-                    <textarea name="comment" 
-                              rows="3" 
-                              class="textarea textarea-bordered" 
-                              placeholder="Tulis komentar atau update..."
-                              required></textarea>
-                </div>
-                <div class="flex items-center justify-between mt-2">
-                    <div class="form-control">
-                        <label class="label cursor-pointer gap-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Add Comment Form -->
+                <form method="POST" action="{{ route('reports.addComment', $report->id) }}" class="order-2 md:order-1">
+                    @csrf
+                    <div class="flex flex-col gap-2">
+                        <label for="comment" class="text-sm font-semibold">Komentar</label>
+                        <textarea id="comment" name="comment" rows="3" class="textarea w-full bg-base-200" placeholder="Tulis komentar atau update..." required></textarea>
+                    </div>
+                    <div class="flex items-center justify-between mt-2">
+                        <div class="flex items-center gap-2">
                             <input type="checkbox" name="is_internal" value="1" class="checkbox checkbox-sm" />
-                            <span class="label-text">Komentar Internal (Hanya untuk admin)</span>
-                        </label>
+                            <span class="text-sm">Komentar Internal (Hanya untuk admin)</span>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" class="intentui-icons size-4" data-slot="icon" aria-hidden="true"><path stroke="currentColor" stroke-linejoin="round" stroke-width="1.5" d="M9 11.75 1.966 5.497c-.687-.61-.255-1.747.664-1.747h18.65a1 1 0 0 1 .868 1.495l-9.146 16.039c-.45.79-1.636.617-1.843-.269zm0 0L22.586 4"></path></svg>
+                            Kirim
+                        </button>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                        </svg>
-                        Kirim
-                    </button>
-                </div>
-            </form>
+                </form>
 
-            <!-- Comments List -->
-            @if($report->comments->count() > 0)
-            <div class="space-y-4">
-                @foreach($report->comments as $comment)
-                <div class="flex gap-3">
-                    <div class="avatar placeholder">
-                        <div class="bg-neutral text-neutral-content rounded-full w-10">
-                            @if($comment->user->avatar)
-                            <img src="{{ $comment->user->avatar }}" alt="{{ $comment->user->name }}">
-                            @else
-                            <span class="text-sm">{{ $comment->user->initials() }}</span>
-                            @endif
-                        </div>
-                    </div>
-                    <div class="flex-1">
-                        <div class="bg-base-200 rounded-lg px-4 py-3">
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="font-semibold text-sm">{{ $comment->user->name }}</span>
-                                @if($comment->user->isAdmin())
-                                <span class="badge badge-primary badge-xs">Admin</span>
-                                @endif
-                                @if($comment->is_internal)
-                                <span class="badge badge-warning badge-xs">Internal</span>
-                                @endif
+                <!-- Comments List -->
+                <div class="order-1 md:order-2">
+                    @if($report->comments->count() > 0)
+                    <div class="space-y-4 bg-base-300 p-4 rounded max-h-96 overflow-y-auto">
+                        @foreach($report->comments as $comment)
+                        <div class="flex gap-3">
+                            <div class="avatar placeholder">
+                                <div class="bg-neutral text-neutral-content rounded-full w-10 h-10 flex justify-center items-center">
+                                    @if($comment->user->avatar)
+                                    <img src="{{ $comment->user->avatar }}" alt="{{ $comment->user->name }}">
+                                    @else
+                                    <span class="text-sm">{{ $comment->user->initials() }}</span>
+                                    @endif
+                                </div>
                             </div>
-                            <p class="text-sm">{{ $comment->comment }}</p>
+                            <div class="flex-1">
+                                <div class="bg-base-200 rounded-lg px-4 py-3">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="font-semibold text-sm">{{ $comment->user->name }}</span>
+                                        @if($comment->user->isAdmin())
+                                        <span class="badge badge-primary badge-xs">Admin</span>
+                                        @endif
+                                        @if($comment->is_internal)
+                                        <span class="badge badge-warning badge-xs">Internal</span>
+                                        @endif
+                                    </div>
+                                    <p class="text-sm">{{ $comment->comment }}</p>
+                                </div>
+                                <div class="text-xs text-gray-500 mt-1 ml-4">{{ $comment->created_at->diffForHumans() }}</div>
+                            </div>
                         </div>
-                        <div class="text-xs text-gray-500 mt-1 ml-4">{{ $comment->created_at->diffForHumans() }}</div>
+                        @endforeach
                     </div>
+                    @else
+                    <div class="text-center py-8 text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        <p>Belum ada komentar</p>
+                    </div>
+                    @endif
                 </div>
-                @endforeach
             </div>
-            @else
-            <div class="text-center py-8 text-gray-500">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-                <p>Belum ada komentar</p>
-            </div>
-            @endif
         </div>
     </div>
 
     <!-- History Timeline -->
     @if($report->histories->count() > 0)
     <div class="card bg-base-100 shadow-lg">
+        <div class="card-title px-5 py-3 border-b border-base-content/10">
+            <h2 class="text-lg font-semibold">Riwayat Perubahan</h2>
+        </div>
         <div class="card-body">
-            <h3 class="text-lg font-semibold mb-4">Riwayat Perubahan</h3>
             <ul class="timeline timeline-vertical">
                 @foreach($report->histories as $history)
                 <li>
@@ -521,11 +515,9 @@
         <form method="POST" action="{{ route('reports.verify', $report->id) }}">
             @csrf
             <div class="py-4 space-y-4">
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">Tingkat Urgensi</span>
-                    </label>
-                    <select name="urgency_level" class="select select-bordered">
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Tingkat Urgensi</label>
+                    <select name="urgency_level" class="select w-full bg-base-200">
                         <option value="">Tidak Diubah ({{ ucfirst($report->urgency_level) }})</option>
                         <option value="low">Rendah</option>
                         <option value="medium">Sedang</option>
@@ -533,15 +525,13 @@
                         <option value="critical">Kritis</option>
                     </select>
                 </div>
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">Catatan Admin (Opsional)</span>
-                    </label>
-                    <textarea name="admin_notes" rows="3" class="textarea textarea-bordered" placeholder="Catatan verifikasi..."></textarea>
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Catatan Admin (Opsional)</label>
+                    <textarea name="admin_notes" rows="3" class="textarea w-full bg-base-200" placeholder="Catatan verifikasi..."></textarea>
                 </div>
             </div>
             <div class="modal-action">
-                <button type="button" class="btn" onclick="verify_modal.close()">Batal</button>
+                <button type="button" class="btn btn-ghost" onclick="verify_modal.close()">Batal</button>
                 <button type="submit" class="btn btn-success">Verifikasi Laporan</button>
             </div>
         </form>
@@ -558,15 +548,13 @@
         <form method="POST" action="{{ route('reports.reject', $report->id) }}">
             @csrf
             <div class="py-4">
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">Alasan Penolakan <span class="text-error">*</span></span>
-                    </label>
-                    <textarea name="rejection_reason" rows="4" class="textarea textarea-bordered" placeholder="Jelaskan alasan penolakan..." required></textarea>
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Alasan Penolakan <span class="text-red-500">*</span></label>
+                    <textarea name="rejection_reason" rows="4" class="textarea w-full bg-base-200" placeholder="Jelaskan alasan penolakan..." required></textarea>
                 </div>
             </div>
             <div class="modal-action">
-                <button type="button" class="btn" onclick="reject_modal.close()">Batal</button>
+                <button type="button" class="btn btn-ghost" onclick="reject_modal.close()">Batal</button>
                 <button type="submit" class="btn btn-error">Tolak Laporan</button>
             </div>
         </form>
@@ -583,10 +571,8 @@
         <form method="POST" action="{{ route('reports.assign', $report->id) }}">
             @csrf
             <div class="py-4 space-y-4">
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">Pilih Relawan <span class="text-error">*</span></span>
-                    </label>
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Pilih Relawan <span class="text-red-500">*</span></label>
                     <div class="max-h-60 overflow-y-auto space-y-2 p-2 border rounded-lg">
                         @foreach($availableRelawan as $relawan)
                         <label class="flex items-center gap-3 p-3 hover:bg-base-200 rounded-lg cursor-pointer">
@@ -607,15 +593,13 @@
                         @endforeach
                     </div>
                 </div>
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">Catatan Penugasan (Opsional)</span>
-                    </label>
-                    <textarea name="notes" rows="3" class="textarea textarea-bordered" placeholder="Catatan untuk relawan..."></textarea>
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Catatan Penugasan (Opsional)</label>
+                    <textarea name="notes" rows="3" class="textarea w-full bg-base-200" placeholder="Catatan untuk relawan..."></textarea>
                 </div>
             </div>
             <div class="modal-action">
-                <button type="button" class="btn" onclick="assign_modal.close()">Batal</button>
+                <button type="button" class="btn btn-ghost" onclick="assign_modal.close()">Batal</button>
                 <button type="submit" class="btn btn-primary">Tugaskan</button>
             </div>
         </form>
@@ -632,23 +616,19 @@
         <form method="POST" action="{{ route('reports.updateUrgency', $report->id) }}">
             @csrf
             <div class="py-4">
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">Tingkat Urgensi Baru <span class="text-error">*</span></span>
-                    </label>
-                    <select name="urgency_level" class="select select-bordered" required>
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Tingkat Urgensi Baru <span class="text-red-500">*</span></label>
+                    <select name="urgency_level" class="select w-full bg-base-200" required>
                         <option value="low" {{ $report->urgency_level == 'low' ? 'selected' : '' }}>Rendah</option>
                         <option value="medium" {{ $report->urgency_level == 'medium' ? 'selected' : '' }}>Sedang</option>
                         <option value="high" {{ $report->urgency_level == 'high' ? 'selected' : '' }}>Tinggi</option>
                         <option value="critical" {{ $report->urgency_level == 'critical' ? 'selected' : '' }}>Kritis</option>
                     </select>
-                    <label class="label">
-                        <span class="label-text-alt">Saat ini: <strong>{{ ucfirst($report->urgency_level) }}</strong></span>
-                    </label>
+                    <p class="text-xs text-gray-500">Saat ini: <strong>{{ ucfirst($report->urgency_level) }}</strong></p>
                 </div>
             </div>
             <div class="modal-action">
-                <button type="button" class="btn" onclick="urgency_modal.close()">Batal</button>
+                <button type="button" class="btn btn-ghost" onclick="urgency_modal.close()">Batal</button>
                 <button type="submit" class="btn btn-primary">Simpan</button>
             </div>
         </form>
@@ -666,15 +646,13 @@
             @csrf
             <div class="py-4">
                 <p class="mb-4">Apakah Anda yakin laporan ini sudah selesai ditangani?</p>
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">Catatan Penyelesaian (Opsional)</span>
-                    </label>
-                    <textarea name="notes" rows="3" class="textarea textarea-bordered" placeholder="Catatan akhir penanganan..."></textarea>
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Catatan Penyelesaian (Opsional)</label>
+                    <textarea name="notes" rows="3" class="textarea w-full bg-base-200" placeholder="Catatan akhir penanganan..."></textarea>
                 </div>
             </div>
             <div class="modal-action">
-                <button type="button" class="btn" onclick="resolve_modal.close()">Batal</button>
+                <button type="button" class="btn btn-ghost" onclick="resolve_modal.close()">Batal</button>
                 <button type="submit" class="btn btn-success">Tandai Selesai</button>
             </div>
         </form>

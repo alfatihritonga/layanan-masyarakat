@@ -64,20 +64,20 @@
     <div class="card bg-base-100 shadow">
         <div class="card-body">
             <form method="GET" action="{{ route('relawan.index') }}" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
-                <div class="form-control xl:col-span-2">
-                    <label class="label"><span class="label-text">Cari</span></label>
+                <div class="flex flex-col gap-2 xl:col-span-2">
+                    <label class="text-sm font-semibold">Cari</label>
                     <input
                         type="text"
                         name="search"
-                        class="input input-bordered"
+                        class="input w-full bg-base-200"
                         placeholder="Nama, email, atau no HP"
                         value="{{ $filters['search'] ?? '' }}"
                     >
                 </div>
 
-                <div class="form-control">
-                    <label class="label"><span class="label-text">Status</span></label>
-                    <select name="status" class="select select-bordered">
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Status</label>
+                    <select name="status" class="select w-full bg-base-200">
                         <option value="">Semua</option>
                         @foreach($statusOptions as $statusValue => $statusLabel)
                             <option value="{{ $statusValue }}" {{ ($filters['status'] ?? '') === $statusValue ? 'selected' : '' }}>
@@ -87,34 +87,32 @@
                     </select>
                 </div>
 
-                <div class="form-control">
-                    <label class="label"><span class="label-text">Kabupaten/Kota</span></label>
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Kabupaten/Kota</label>
                     <input
                         type="text"
                         name="kabupaten"
-                        class="input input-bordered"
+                        class="input w-full bg-base-200"
                         placeholder="Contoh: Kota Medan"
                         value="{{ $filters['kabupaten'] ?? '' }}"
                     >
                 </div>
 
-                <div class="form-control">
-                    <label class="label"><span class="label-text">Tahun Bergabung</span></label>
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Tahun Bergabung</label>
                     <input
                         type="number"
                         name="tahun"
-                        class="input input-bordered"
+                        class="input w-full bg-base-200"
                         min="2000"
                         max="{{ now()->year }}"
                         value="{{ $filters['tahun'] ?? '' }}"
                     >
                 </div>
 
-                <div class="form-control md:col-span-2 xl:col-span-5">
-                    <div class="flex gap-2 justify-end">
-                        <a href="{{ route('relawan.index') }}" class="btn btn-ghost">Reset</a>
-                        <button type="submit" class="btn btn-primary">Terapkan Filter</button>
-                    </div>
+                <div class="md:col-span-2 xl:col-span-5 flex justify-end gap-2">
+                    <a href="{{ route('relawan.index') }}" class="btn btn-ghost">Reset</a>
+                    <button type="submit" class="btn btn-primary">Terapkan Filter</button>
                 </div>
             </form>
         </div>
@@ -156,13 +154,13 @@
                                     <div class="text-xs text-gray-500">{{ $item->kabupaten_kota }}</div>
                                 </td>
                                 <td>
-                                    <span class="badge {{ $statusBadges[$item->status_ketersediaan] ?? 'badge-ghost' }}">
+                                    <span class="badge {{ $statusBadges[$item->status_ketersediaan] ?? 'badge-ghost' }} whitespace-nowrap">
                                         {{ $statusOptions[$item->status_ketersediaan] ?? ucfirst($item->status_ketersediaan) }}
                                     </span>
                                 </td>
                                 <td>
                                     @if(count($skills) > 0)
-                                        <div class="flex flex-wrap gap-1">
+                                        <div class="flex flex-wrap gap-1 whitespace-nowrap">
                                             @foreach($skills as $skill)
                                                 <span class="badge badge-outline badge-sm">{{ $skill }}</span>
                                             @endforeach

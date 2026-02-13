@@ -36,71 +36,61 @@
         @method('PUT')
 
         <div class="card bg-base-100 shadow">
-            <div class="card-body space-y-5">
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text font-semibold">Nama <span class="text-error">*</span></span>
-                    </label>
+            <div class="card-body space-y-6">
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Nama <span class="text-red-500">*</span></label>
                     <input
                         type="text"
                         name="name"
-                        class="input input-bordered @error('name') input-error @enderror"
+                        class="input w-full bg-base-200 @error('name') input-error @enderror"
                         value="{{ old('name', $disasterType->name) }}"
                         maxlength="100"
                         required
                     >
                     @error('name')
-                    <label class="label"><span class="label-text-alt text-error">{{ $message }}</span></label>
+                        <p class="text-xs text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text font-semibold">Deskripsi</span>
-                    </label>
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Deskripsi</label>
                     <textarea
                         name="description"
                         rows="4"
-                        class="textarea textarea-bordered @error('description') textarea-error @enderror"
+                        class="textarea w-full bg-base-200 @error('description') textarea-error @enderror"
                         maxlength="500"
                     >{{ old('description', $disasterType->description) }}</textarea>
                     @error('description')
-                    <label class="label"><span class="label-text-alt text-error">{{ $message }}</span></label>
+                        <p class="text-xs text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text font-semibold">Icon</span>
-                        </label>
-                        <input
-                            type="text"
-                            name="icon"
-                            class="input input-bordered @error('icon') input-error @enderror"
-                            value="{{ old('icon', $disasterType->icon) }}"
-                            maxlength="100"
-                            placeholder="Contoh: flood, house-damage"
-                        >
-                        @error('icon')
-                        <label class="label"><span class="label-text-alt text-error">{{ $message }}</span></label>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-semibold">Icon SVG</label>
+                        <textarea
+                            name="icon_svg"
+                            rows="4"
+                            class="textarea w-full bg-base-200 @error('icon_svg') textarea-error @enderror"
+                            placeholder="Tempelkan SVG di sini"
+                        >{{ old('icon_svg', $disasterType->icon_svg) }}</textarea>
+                        @error('icon_svg')
+                            <p class="text-xs text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text font-semibold">Warna (Hex)</span>
-                        </label>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-semibold">Warna (Hex)</label>
                         <input
                             type="text"
                             name="color"
-                            class="input input-bordered @error('color') input-error @enderror"
+                            class="input w-full bg-base-200 @error('color') input-error @enderror"
                             value="{{ old('color', $disasterType->color) }}"
                             maxlength="7"
                             placeholder="#FF5733"
                         >
                         @error('color')
-                        <label class="label"><span class="label-text-alt text-error">{{ $message }}</span></label>
+                            <p class="text-xs text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -115,7 +105,7 @@
             </div>
         </div>
 
-        <div class="flex justify-end gap-3 mt-6">
+        <div class="flex justify-end gap-4 mt-6">
             <a href="{{ route('disaster-types.show', $disasterType->id) }}" class="btn btn-ghost">Batal</a>
             <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
         </div>

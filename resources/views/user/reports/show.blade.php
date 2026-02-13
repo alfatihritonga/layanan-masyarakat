@@ -165,7 +165,7 @@
                 <form method="POST" action="{{ route('user.reports.addAttachment', $report->id) }}" enctype="multipart/form-data" class="mt-4">
                     @csrf
                     <div class="flex gap-2">
-                        <input type="file" name="file" class="file-input file-input-bordered flex-1" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,video/mp4,video/mpeg,video/quicktime,video/x-msvideo" required>
+                        <input type="file" name="file" class="file-input w-full bg-base-200 flex-1" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,video/mp4,video/mpeg,video/quicktime,video/x-msvideo" required>
                         <button type="submit" class="btn btn-primary">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -247,8 +247,8 @@
                 <form method="POST" action="{{ route('user.reports.addComment', $report->id) }}" class="order-2 md:order-1">
                     @csrf
                     <div class="flex flex-col gap-2">
-                        <label for="comment" class="font-semibold">Komentar</label>
-                        <textarea id="comment" name="comment" rows="3" class="textarea textarea-bordered w-full" placeholder="Tulis komentar atau pertanyaan..." required></textarea>
+                        <label for="comment" class="text-sm font-semibold">Komentar</label>
+                        <textarea id="comment" name="comment" rows="3" class="textarea w-full bg-base-200" placeholder="Tulis komentar atau pertanyaan..." required></textarea>
                     </div>
                     <div class="flex justify-end mt-2">
                         <button type="submit" class="btn btn-primary btn-sm">
@@ -341,7 +341,7 @@
             <form method="POST" action="{{ route('user.reports.destroy', $report->id) }}">
                 @csrf
                 @method('DELETE')
-                <button type="button" class="btn" onclick="delete_modal.close()">Batal</button>
+                <button type="button" class="btn btn-ghost" onclick="delete_modal.close()">Batal</button>
                 <button type="submit" class="btn btn-error">Hapus</button>
             </form>
         </div>
@@ -360,7 +360,7 @@
             <form id="delete-attachment-form" method="POST">
                 @csrf
                 @method('DELETE')
-                <button type="button" class="btn" onclick="delete_attachment_modal.close()">Batal</button>
+                <button type="button" class="btn btn-ghost" onclick="delete_attachment_modal.close()">Batal</button>
                 <button type="submit" class="btn btn-error">Hapus</button>
             </form>
         </div>

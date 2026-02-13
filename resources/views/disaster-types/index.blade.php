@@ -27,22 +27,20 @@
     <div class="card bg-base-100 shadow">
         <div class="card-body">
             <form method="GET" action="{{ route('disaster-types.index') }}" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="form-control">
-                    <label class="label"><span class="label-text">Cari</span></label>
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Cari</label>
                     <input
                         type="text"
                         name="search"
-                        class="input input-bordered"
+                        class="input w-full bg-base-200"
                         placeholder="Nama atau deskripsi"
                         value="{{ $filters['search'] ?? '' }}"
                     >
                 </div>
 
-                <div class="form-control md:col-span-2">
-                    <div class="flex gap-2 justify-end">
-                        <a href="{{ route('disaster-types.index') }}" class="btn btn-ghost">Reset</a>
-                        <button type="submit" class="btn btn-primary">Terapkan Filter</button>
-                    </div>
+                <div class="md:col-span-2 flex justify-end gap-2">
+                    <a href="{{ route('disaster-types.index') }}" class="btn btn-ghost">Reset</a>
+                    <button type="submit" class="btn btn-primary">Terapkan Filter</button>
                 </div>
             </form>
         </div>
@@ -57,7 +55,7 @@
                             <th>No</th>
                             <th>Nama</th>
                             <th>Deskripsi</th>
-                            <th>Icon</th>
+                            <th>Icon SVG</th>
                             <th>Warna</th>
                             <th class="text-right">Aksi</th>
                         </tr>
@@ -83,8 +81,11 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if($item->icon)
-                                        <span class="font-mono text-xs">{{ $item->icon }}</span>
+                                    @if($item->icon_svg)
+                                    <div class="p-2 bg-primary/20 rounded w-fit">
+                                        {!! $item->icon_svg !!}
+                                    </div>
+                                        {{-- <span class="font-mono text-xs">{{ \Illuminate\Support\Str::limit($item->icon_svg, 80) }}</span> --}}
                                     @else
                                         <span class="text-gray-400">-</span>
                                     @endif

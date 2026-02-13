@@ -267,7 +267,7 @@
                             <td>
                                 <x-badge urgency="{{ $report->urgency_level }}" />
                             </td>
-                            <td>
+                            <td class="whitespace-nowrap">
                                 <x-badge status="{{ $report->status }}" />
                             </td>
                             <td class="text-sm text-gray-500">

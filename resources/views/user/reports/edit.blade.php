@@ -33,11 +33,9 @@
             <div class="card-body space-y-6">
                 
                 <!-- Jenis Bencana -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text font-semibold">Jenis Bencana <span class="text-error">*</span></span>
-                    </label>
-                    <select name="disaster_type_id" class="select select-bordered @error('disaster_type_id') select-error @enderror" required>
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Jenis Bencana <span class="text-red-500">*</span></label>
+                    <select name="disaster_type_id" class="select w-full bg-base-200 @error('disaster_type_id') select-error @enderror" required>
                         <option value="">Pilih Jenis Bencana</option>
                         @foreach($disasterTypes as $type)
                         <option value="{{ $type->id }}" {{ old('disaster_type_id', $report->disaster_type_id) == $type->id ? 'selected' : '' }}>
@@ -46,133 +44,103 @@
                         @endforeach
                     </select>
                     @error('disaster_type_id')
-                    <label class="label">
-                        <span class="label-text-alt text-error">{{ $message }}</span>
-                    </label>
+                        <p class="text-xs text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Deskripsi Kejadian -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text font-semibold">Deskripsi Kejadian <span class="text-error">*</span></span>
-                    </label>
-                    <textarea name="description" 
-                              rows="5" 
-                              class="textarea textarea-bordered @error('description') textarea-error @enderror" 
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Deskripsi Kejadian <span class="text-red-500">*</span></label>
+                    <textarea name="description"
+                              rows="5"
+                              class="textarea w-full bg-base-200 @error('description') textarea-error @enderror"
                               placeholder="Jelaskan detail kejadian bencana yang terjadi..."
                               required>{{ old('description', $report->description) }}</textarea>
                     @error('description')
-                    <label class="label">
-                        <span class="label-text-alt text-error">{{ $message }}</span>
-                    </label>
+                        <p class="text-xs text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Lokasi Kejadian -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text font-semibold">Alamat Lengkap Lokasi <span class="text-error">*</span></span>
-                    </label>
-                    <textarea name="location_address" 
-                              rows="3" 
-                              class="textarea textarea-bordered @error('location_address') textarea-error @enderror" 
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Alamat Lengkap Lokasi <span class="text-red-500">*</span></label>
+                    <textarea name="location_address"
+                              rows="3"
+                              class="textarea w-full bg-base-200 @error('location_address') textarea-error @enderror"
                               placeholder="Contoh: Jl. Merdeka No. 10, RT 01/RW 02, Kelurahan Tanjung Sari..."
                               required>{{ old('location_address', $report->location_address) }}</textarea>
                     @error('location_address')
-                    <label class="label">
-                        <span class="label-text-alt text-error">{{ $message }}</span>
-                    </label>
+                        <p class="text-xs text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Tanggal & Waktu Kejadian -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text font-semibold">Tanggal & Waktu Kejadian <span class="text-error">*</span></span>
-                        </label>
-                        <input type="datetime-local" 
-                               name="incident_date" 
-                               class="input input-bordered @error('incident_date') input-error @enderror"
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-semibold">Tanggal & Waktu Kejadian <span class="text-red-500">*</span></label>
+                        <input type="datetime-local"
+                               name="incident_date"
+                               class="input w-full bg-base-200 @error('incident_date') input-error @enderror"
                                value="{{ old('incident_date', $report->incident_date->format('Y-m-d\TH:i')) }}"
                                max="{{ now()->format('Y-m-d\TH:i') }}"
                                required>
                         @error('incident_date')
-                        <label class="label">
-                            <span class="label-text-alt text-error">{{ $message }}</span>
-                        </label>
+                            <p class="text-xs text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text font-semibold">Tingkat Urgensi <span class="text-error">*</span></span>
-                        </label>
-                        <select name="urgency_level" class="select select-bordered @error('urgency_level') select-error @enderror" required>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-semibold">Tingkat Urgensi <span class="text-red-500">*</span></label>
+                        <select name="urgency_level" class="select w-full bg-base-200 @error('urgency_level') select-error @enderror" required>
                             <option value="low" {{ old('urgency_level', $report->urgency_level) == 'low' ? 'selected' : '' }}>Rendah</option>
                             <option value="medium" {{ old('urgency_level', $report->urgency_level) == 'medium' ? 'selected' : '' }}>Sedang</option>
                             <option value="high" {{ old('urgency_level', $report->urgency_level) == 'high' ? 'selected' : '' }}>Tinggi</option>
                             <option value="critical" {{ old('urgency_level', $report->urgency_level) == 'critical' ? 'selected' : '' }}>Kritis</option>
                         </select>
                         @error('urgency_level')
-                        <label class="label">
-                            <span class="label-text-alt text-error">{{ $message }}</span>
-                        </label>
+                            <p class="text-xs text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
 
                 <!-- Jumlah Korban & Kontak -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text font-semibold">Jumlah Korban (Opsional)</span>
-                        </label>
-                        <input type="number" 
-                               name="victim_count" 
-                               class="input input-bordered @error('victim_count') input-error @enderror"
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-semibold">Jumlah Korban (Opsional)</label>
+                        <input type="number"
+                               name="victim_count"
+                               class="input w-full bg-base-200 @error('victim_count') input-error @enderror"
                                placeholder="0"
                                min="0"
                                value="{{ old('victim_count', $report->victim_count) }}">
                         @error('victim_count')
-                        <label class="label">
-                            <span class="label-text-alt text-error">{{ $message }}</span>
-                        </label>
+                            <p class="text-xs text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text font-semibold">Nomor HP yang Bisa Dihubungi <span class="text-error">*</span></span>
-                        </label>
-                        <input type="tel" 
-                               name="contact_phone" 
-                               class="input input-bordered @error('contact_phone') input-error @enderror"
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-semibold">Nomor HP yang Bisa Dihubungi <span class="text-red-500">*</span></label>
+                        <input type="tel"
+                               name="contact_phone"
+                               class="input w-full bg-base-200 @error('contact_phone') input-error @enderror"
                                placeholder="081234567890"
                                value="{{ old('contact_phone', $report->contact_phone) }}"
                                required>
                         @error('contact_phone')
-                        <label class="label">
-                            <span class="label-text-alt text-error">{{ $message }}</span>
-                        </label>
+                            <p class="text-xs text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
 
                 <!-- Deskripsi Kerusakan -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text font-semibold">Deskripsi Kerusakan (Opsional)</span>
-                    </label>
-                    <textarea name="damage_description" 
-                              rows="3" 
-                              class="textarea textarea-bordered @error('damage_description') textarea-error @enderror" 
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Deskripsi Kerusakan (Opsional)</label>
+                    <textarea name="damage_description"
+                              rows="3"
+                              class="textarea w-full bg-base-200 @error('damage_description') textarea-error @enderror"
                               placeholder="Jelaskan kerusakan yang ditimbulkan...">{{ old('damage_description', $report->damage_description) }}</textarea>
                     @error('damage_description')
-                    <label class="label">
-                        <span class="label-text-alt text-error">{{ $message }}</span>
-                    </label>
+                        <p class="text-xs text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
 

@@ -2,171 +2,194 @@
 
 namespace Database\Seeders;
 
+use App\Models\DisasterType;
 use App\Models\Report;
 use App\Models\ReportComment;
 use App\Models\ReportHistory;
 use App\Models\User;
-use App\Models\DisasterType;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 
 class ReportSeeder extends Seeder
 {
     public function run(): void
     {
-        $users = User::where('role', 'user')->get();
+        $users = User::where('role', 'user')->get()->values();
         $admin = User::where('role', 'admin')->first();
-        $disasterTypes = DisasterType::all();
+        $disasterTypes = DisasterType::all()->values();
 
-        // Report 1 - Pending
-        $report1 = Report::create([
-            'user_id' => $users[0]->id,
-            'disaster_type_id' => $disasterTypes->where('name', 'Banjir')->first()->id,
-            'description' => 'Banjir setinggi 1 meter merendam perumahan di Jl. Setia Budi. Air mulai naik sejak pagi hari karena hujan deras semalam. Banyak rumah warga yang terendam dan kendaraan tidak bisa melintas.',
-            'location_address' => 'Jl. Setia Budi Raya No. 45, Kelurahan Tanjung Sari, Kecamatan Medan Selayang, Kota Medan, Sumatera Utara',
-            'incident_date' => now()->subHours(3),
-            'urgency_level' => 'high',
-            'status' => 'pending',
-            'victim_count' => 15,
-            'damage_description' => 'Sekitar 20 rumah terendam, 5 motor mogok, akses jalan tertutup air',
-            'contact_phone' => '081234567890',
-        ]);
+        if ($users->isEmpty() || !$admin || $disasterTypes->isEmpty()) {
+            return;
+        }
 
-        // Report 2 - Verified
-        $report2 = Report::create([
-            'user_id' => $users[1]->id,
-            'disaster_type_id' => $disasterTypes->where('name', 'Kebakaran')->first()->id,
-            'description' => 'Kebakaran rumah di pemukiman padat penduduk. Api diduga berasal dari korsleting listrik. Sudah ada tim damkar yang datang tetapi memerlukan bantuan evakuasi warga.',
-            'location_address' => 'Jl. Kapten Muslim Gang 5 No. 12, Kelurahan Sei Rengas, Kecamatan Medan Area, Kota Medan',
-            'incident_date' => now()->subHours(5),
-            'urgency_level' => 'critical',
-            'status' => 'verified',
-            'victim_count' => 8,
-            'damage_description' => '2 rumah terbakar habis, 1 rumah rusak sebagian, 8 KK mengungsi',
-            'contact_phone' => '082345678901',
-            'verified_at' => now()->subHours(4),
-            'verified_by' => $admin->id,
-        ]);
+        $regions = [
+            ['name' => 'Medan', 'kecamatan' => ['Medan Baru', 'Medan Timur', 'Medan Barat', 'Medan Selayang']],
+            ['name' => 'Binjai', 'kecamatan' => ['Binjai Utara', 'Binjai Selatan', 'Binjai Timur']],
+            ['name' => 'Deli Serdang', 'kecamatan' => ['Lubuk Pakam', 'Percut Sei Tuan', 'Tanjung Morawa']],
+            ['name' => 'Langkat', 'kecamatan' => ['Stabat', 'Tanjung Pura', 'Besitang']],
+            ['name' => 'Karo', 'kecamatan' => ['Kabanjahe', 'Berastagi', 'Tigapanah']],
+            ['name' => 'Simalungun', 'kecamatan' => ['Siantar', 'Raya', 'Dolok Panribuan']],
+            ['name' => 'Asahan', 'kecamatan' => ['Kisaran Barat', 'Kisaran Timur', 'Air Batu']],
+            ['name' => 'Serdang Bedagai', 'kecamatan' => ['Sei Rampah', 'Perbaungan', 'Pantai Cermin']],
+            ['name' => 'Batu Bara', 'kecamatan' => ['Lima Puluh', 'Talawi', 'Tanjung Tiram']],
+            ['name' => 'Tapanuli Utara', 'kecamatan' => ['Tarutung', 'Sipoholon', 'Pahae Jae']],
+            ['name' => 'Tapanuli Tengah', 'kecamatan' => ['Pandan', 'Barus', 'Sirandorung']],
+            ['name' => 'Tapanuli Selatan', 'kecamatan' => ['Sipirok', 'Batang Toru', 'Angkola Timur']],
+            ['name' => 'Mandailing Natal', 'kecamatan' => ['Panyabungan', 'Kotanopan', 'Natal']],
+            ['name' => 'Toba', 'kecamatan' => ['Balige', 'Laguboti', 'Porsea']],
+            ['name' => 'Nias', 'kecamatan' => ['Gido', 'Idano Gawo', 'Hiliduho']],
+            ['name' => 'Nias Selatan', 'kecamatan' => ['Teluk Dalam', 'Lahusa', 'Gomo']],
+        ];
 
+        $streets = ['Merdeka', 'Gatot Subroto', 'Ahmad Yani', 'Sisingamangaraja', 'Veteran', 'Sudirman', 'Diponegoro', 'Imam Bonjol', 'Kartini', 'Cendana'];
+        $urgencyLevels = ['low', 'medium', 'high', 'critical'];
+        $statuses = ['pending', 'verified', 'in_progress', 'resolved', 'rejected'];
+
+        $descriptionByType = [
+            'Banjir' => 'Banjir menggenangi pemukiman warga dan akses jalan utama terendam.',
+            'Gempa Bumi' => 'Getaran gempa dirasakan warga, terjadi kerusakan ringan di beberapa rumah.',
+            'Kebakaran' => 'Kebakaran terjadi di area pemukiman padat dan membutuhkan bantuan evakuasi.',
+            'Tanah Longsor' => 'Material longsor menutup akses jalan dan mengancam rumah di lereng.',
+            'Tsunami' => 'Gelombang tinggi menggenangi kawasan pesisir, warga perlu dievakuasi.',
+            'Gunung Meletus' => 'Letusan mengeluarkan abu vulkanik, jarak pandang menurun drastis.',
+            'Angin Puting Beliung' => 'Angin kencang merusak atap rumah dan menumbangkan pohon besar.',
+            'Kekeringan' => 'Pasokan air menurun, warga kesulitan mendapatkan air bersih.',
+            'Bencana Industri' => 'Terjadi kebocoran bahan berbahaya di kawasan industri.',
+            'Wabah Penyakit' => 'Terjadi peningkatan kasus penyakit menular di masyarakat.',
+        ];
+
+        $commentPublic = [
+            'Mohon segera ada bantuan di lokasi.',
+            'Warga sudah berkumpul di titik aman, butuh logistik.',
+            'Situasi memburuk dalam satu jam terakhir.',
+            'Mohon perhatian, akses jalan utama terputus.',
+        ];
+
+        $commentInternal = [
+            'Koordinasi dengan BPBD setempat untuk penanganan.',
+            'Siapkan relawan logistik dan medis.',
+            'Pantau perkembangan dan update status berkala.',
+        ];
+
+        $reportsPerYear = [
+            2020 => 12,
+            2021 => 14,
+            2022 => 11,
+            2023 => 13,
+            2024 => 15,
+            2025 => 16,
+            2026 => 12,
+        ];
+
+        $reportIndex = 0;
+
+        foreach ($reportsPerYear as $year => $count) {
+            for ($i = 0; $i < $count; $i++) {
+                $reportIndex++;
+
+                $user = $users[$reportIndex % $users->count()];
+                $disasterType = $disasterTypes[$reportIndex % $disasterTypes->count()];
+                $region = $regions[$reportIndex % count($regions)];
+                $kecamatan = $region['kecamatan'][$reportIndex % count($region['kecamatan'])];
+                $street = $streets[$reportIndex % count($streets)];
+
+                $incidentDate = Carbon::create($year, ($i % 12) + 1, (($i * 3) % 27) + 1, 8 + ($i % 10), 15);
+                if ($year === (int) now()->year && $incidentDate->greaterThan(now())) {
+                    $incidentDate = now()->subDays($i + 1);
+                }
+
+                $urgency = $urgencyLevels[$reportIndex % count($urgencyLevels)];
+                $status = $statuses[$reportIndex % count($statuses)];
+
+                $descriptionBase = $descriptionByType[$disasterType->name] ?? 'Terjadi kejadian bencana yang membutuhkan penanganan segera.';
+                $description = $descriptionBase . ' Lokasi kejadian di Kecamatan ' . $kecamatan . ', ' . $region['name'] . '.';
+
+                $victimCount = $urgency === 'low' ? null : 1 + ($reportIndex % 40);
+                $damageDescription = $urgency === 'low'
+                    ? null
+                    : 'Terdapat kerusakan pada fasilitas warga dan gangguan akses di sekitar lokasi.';
+
+                $reportData = [
+                    'user_id' => $user->id,
+                    'disaster_type_id' => $disasterType->id,
+                    'description' => $description,
+                    'location_address' => 'Jl. ' . $street . ' No. ' . (10 + ($reportIndex % 90)) . ', Kecamatan ' . $kecamatan . ', ' . $region['name'] . ', Sumatera Utara',
+                    'incident_date' => $incidentDate,
+                    'urgency_level' => $urgency,
+                    'status' => $status,
+                    'victim_count' => $victimCount,
+                    'damage_description' => $damageDescription,
+                    'contact_phone' => '08' . str_pad((string) (1300000000 + $reportIndex), 10, '0', STR_PAD_LEFT),
+                ];
+
+                if ($status !== 'pending') {
+                    $reportData['verified_at'] = $incidentDate->copy()->addHours(6);
+                    $reportData['verified_by'] = $admin->id;
+                    $reportData['admin_notes'] = 'Laporan telah diverifikasi dan ditindaklanjuti.';
+                }
+
+                if ($status === 'in_progress') {
+                    $reportData['admin_notes'] = 'Tim sedang melakukan penanganan di lapangan.';
+                }
+
+                if ($status === 'resolved') {
+                    $reportData['resolved_at'] = $incidentDate->copy()->addDays(2);
+                    $reportData['admin_notes'] = 'Penanganan selesai dan situasi terkendali.';
+                }
+
+                if ($status === 'rejected') {
+                    $reportData['rejection_reason'] = 'Laporan tidak memenuhi kriteria prioritas penanganan.';
+                }
+
+                $report = Report::create($reportData);
+
+                if ($status === 'verified') {
+                    $this->createHistory($report->id, $admin->id, 'pending', 'verified', 'Laporan diverifikasi oleh admin.');
+                }
+
+                if ($status === 'in_progress') {
+                    $this->createHistory($report->id, $admin->id, 'pending', 'verified', 'Laporan diverifikasi.');
+                    $this->createHistory($report->id, $admin->id, 'verified', 'in_progress', 'Tim ditugaskan ke lokasi.');
+                }
+
+                if ($status === 'resolved') {
+                    $this->createHistory($report->id, $admin->id, 'pending', 'verified', 'Laporan diverifikasi.');
+                    $this->createHistory($report->id, $admin->id, 'verified', 'in_progress', 'Tim berada di lokasi.');
+                    $this->createHistory($report->id, $admin->id, 'in_progress', 'resolved', 'Penanganan selesai.');
+                }
+
+                if ($status === 'rejected') {
+                    $this->createHistory($report->id, $admin->id, 'pending', 'rejected', 'Laporan ditolak setelah verifikasi.');
+                }
+
+                ReportComment::create([
+                    'report_id' => $report->id,
+                    'user_id' => $user->id,
+                    'comment' => $commentPublic[$reportIndex % count($commentPublic)],
+                    'is_internal' => false,
+                ]);
+
+                if ($status !== 'pending') {
+                    ReportComment::create([
+                        'report_id' => $report->id,
+                        'user_id' => $admin->id,
+                        'comment' => $commentInternal[$reportIndex % count($commentInternal)],
+                        'is_internal' => true,
+                    ]);
+                }
+            }
+        }
+    }
+
+    private function createHistory(int $reportId, int $adminId, string $oldValue, string $newValue, string $notes): void
+    {
         ReportHistory::create([
-            'report_id' => $report2->id,
-            'changed_by' => $admin->id,
+            'report_id' => $reportId,
+            'changed_by' => $adminId,
             'field_name' => 'status',
-            'old_value' => 'pending',
-            'new_value' => 'verified',
-            'notes' => 'Laporan telah diverifikasi dan akan segera ditindaklanjuti',
-        ]);
-
-        // Report 3 - In Progress
-        $report3 = Report::create([
-            'user_id' => $users[2]->id,
-            'disaster_type_id' => $disasterTypes->where('name', 'Tanah Longsor')->first()->id,
-            'description' => 'Tanah longsor menutupi akses jalan utama ke desa. Material longsor cukup besar dan mengancam rumah warga di bawahnya. Perlu penanganan segera.',
-            'location_address' => 'Jalan Raya Pancur Batu KM 15, Desa Pancur Batu, Kecamatan Pancur Batu, Kabupaten Deli Serdang',
-            'incident_date' => now()->subDays(1),
-            'urgency_level' => 'high',
-            'status' => 'in_progress',
-            'victim_count' => 0,
-            'damage_description' => 'Akses jalan terputus sepanjang 50 meter, 3 rumah terancam',
-            'contact_phone' => '083456789012',
-            'verified_at' => now()->subHours(20),
-            'verified_by' => $admin->id,
-            'admin_notes' => 'Tim sudah ditugaskan untuk evakuasi dan pembersihan material longsor',
-        ]);
-
-        ReportHistory::create([
-            'report_id' => $report3->id,
-            'changed_by' => $admin->id,
-            'field_name' => 'status',
-            'old_value' => 'pending',
-            'new_value' => 'verified',
-            'notes' => 'Laporan diverifikasi',
-        ]);
-
-        ReportHistory::create([
-            'report_id' => $report3->id,
-            'changed_by' => $admin->id,
-            'field_name' => 'status',
-            'old_value' => 'verified',
-            'new_value' => 'in_progress',
-            'notes' => 'Relawan telah ditugaskan ke lokasi',
-        ]);
-
-        // Report 4 - Resolved
-        $report4 = Report::create([
-            'user_id' => $users[0]->id,
-            'disaster_type_id' => $disasterTypes->where('name', 'Banjir')->first()->id,
-            'description' => 'Banjir di perumahan Griya Martubung sudah mulai surut tetapi masih ada genangan di beberapa titik. Bantuan pompa air sangat diperlukan.',
-            'location_address' => 'Perumahan Griya Martubung Blok C, Kelurahan Martubung, Kecamatan Medan Labuhan',
-            'incident_date' => now()->subDays(3),
-            'urgency_level' => 'medium',
-            'status' => 'resolved',
-            'victim_count' => 25,
-            'damage_description' => '15 rumah terendam, kerugian material sekitar 50 juta',
-            'contact_phone' => '084567890123',
-            'verified_at' => now()->subDays(2),
-            'verified_by' => $admin->id,
-            'resolved_at' => now()->subHours(2),
-            'admin_notes' => 'Air sudah surut, warga sudah kembali ke rumah, bantuan logistik sudah disalurkan',
-        ]);
-
-        ReportComment::create([
-            'report_id' => $report4->id,
-            'user_id' => $users[0]->id,
-            'comment' => 'Terima kasih atas bantuannya, air sudah surut dan kondisi sudah membaik',
-            'is_internal' => false,
-        ]);
-
-        // Report 5 - Rejected
-        $report5 = Report::create([
-            'user_id' => $users[1]->id,
-            'disaster_type_id' => $disasterTypes->where('name', 'Gempa Bumi')->first()->id,
-            'description' => 'Gempa bumi kecil terasa di area Medan',
-            'location_address' => 'Kota Medan',
-            'incident_date' => now()->subDays(5),
-            'urgency_level' => 'low',
-            'status' => 'rejected',
-            'contact_phone' => '085678901234',
-            'verified_at' => now()->subDays(4),
-            'verified_by' => $admin->id,
-            'rejection_reason' => 'Gempa bumi skala rendah (< 3 SR) tidak memerlukan penanganan khusus. Tidak ada kerusakan atau korban yang dilaporkan.',
-        ]);
-
-        ReportHistory::create([
-            'report_id' => $report5->id,
-            'changed_by' => $admin->id,
-            'field_name' => 'status',
-            'old_value' => 'pending',
-            'new_value' => 'rejected',
-            'notes' => 'Laporan ditolak karena tidak memerlukan tindak lanjut',
-        ]);
-
-        // Report 6 - Pending (recent)
-        $report6 = Report::create([
-            'user_id' => $users[2]->id,
-            'disaster_type_id' => $disasterTypes->where('name', 'Angin Puting Beliung')->first()->id,
-            'description' => 'Angin puting beliung merusak puluhan rumah warga. Banyak atap rumah yang terbang dan pohon tumbang. Listrik padam di beberapa area.',
-            'location_address' => 'Desa Bandar Khalifah, Kecamatan Percut Sei Tuan, Kabupaten Deli Serdang',
-            'incident_date' => now()->subMinutes(30),
-            'urgency_level' => 'critical',
-            'status' => 'pending',
-            'victim_count' => 10,
-            'damage_description' => '30 rumah rusak berat, 15 rumah rusak ringan, 20 pohon tumbang, 2 orang luka-luka',
-            'contact_phone' => '086789012345',
-        ]);
-
-        // Comments
-        ReportComment::create([
-            'report_id' => $report2->id,
-            'user_id' => $admin->id,
-            'comment' => 'Laporan sudah diverifikasi. Tim akan segera ditugaskan.',
-            'is_internal' => false,
-        ]);
-
-        ReportComment::create([
-            'report_id' => $report3->id,
-            'user_id' => $admin->id,
-            'comment' => 'Koordinasi dengan BPBD setempat untuk alat berat',
-            'is_internal' => true,
+            'old_value' => $oldValue,
+            'new_value' => $newValue,
+            'notes' => $notes,
         ]);
     }
 }

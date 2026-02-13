@@ -23,23 +23,19 @@
         <div class="card-body">
             <form method="GET" action="{{ route('user.reports.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <!-- Search -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">Cari</span>
-                    </label>
-                    <input type="text" 
-                           name="search" 
-                           placeholder="Cari laporan..." 
-                           class="input input-bordered"
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Cari</label>
+                    <input type="text"
+                           name="search"
+                           placeholder="Cari laporan..."
+                           class="input w-full bg-base-200"
                            value="{{ $filters['search'] ?? '' }}">
                 </div>
 
                 <!-- Status Filter -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">Status</span>
-                    </label>
-                    <select name="status" class="select select-bordered">
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Status</label>
+                    <select name="status" class="select w-full bg-base-200">
                         <option value="">Semua Status</option>
                         <option value="pending" {{ ($filters['status'] ?? '') == 'pending' ? 'selected' : '' }}>Pending</option>
                         <option value="verified" {{ ($filters['status'] ?? '') == 'verified' ? 'selected' : '' }}>Terverifikasi</option>
@@ -50,11 +46,9 @@
                 </div>
 
                 <!-- Disaster Type Filter -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">Jenis Bencana</span>
-                    </label>
-                    <select name="disaster_type_id" class="select select-bordered">
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Jenis Bencana</label>
+                    <select name="disaster_type_id" class="select w-full bg-base-200">
                         <option value="">Semua Jenis</option>
                         @foreach($disasterTypes as $type)
                         <option value="{{ $type->id }}" {{ ($filters['disaster_type_id'] ?? '') == $type->id ? 'selected' : '' }}>
@@ -65,10 +59,8 @@
                 </div>
 
                 <!-- Actions -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text">&nbsp;</span>
-                    </label>
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">&nbsp;</label>
                     <div class="flex gap-2">
                         <button type="submit" class="btn btn-primary flex-1">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -208,7 +200,7 @@
             <form id="delete-form" method="POST">
                 @csrf
                 @method('DELETE')
-                <button type="button" class="btn" onclick="delete_modal.close()">Batal</button>
+                <button type="button" class="btn btn-ghost" onclick="delete_modal.close()">Batal</button>
                 <button type="submit" class="btn btn-error">Hapus</button>
             </form>
         </div>

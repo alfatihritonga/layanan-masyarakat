@@ -18,11 +18,9 @@
             <div class="card-body space-y-6">
                 
                 <!-- Jenis Bencana -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text font-semibold">Jenis Bencana <span class="text-error">*</span></span>
-                    </label>
-                    <select name="disaster_type_id" class="select select-bordered @error('disaster_type_id') select-error @enderror" required>
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Jenis Bencana <span class="text-red-500">*</span></label>
+                    <select name="disaster_type_id" class="select w-full bg-base-200 @error('disaster_type_id') select-error @enderror" required>
                         <option value="">Pilih Jenis Bencana</option>
                         @foreach($disasterTypes as $type)
                         <option value="{{ $type->id }}" {{ old('disaster_type_id') == $type->id ? 'selected' : '' }}>
@@ -31,147 +29,113 @@
                         @endforeach
                     </select>
                     @error('disaster_type_id')
-                    <label class="label">
-                        <span class="label-text-alt text-error">{{ $message }}</span>
-                    </label>
+                        <p class="text-xs text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Deskripsi Kejadian -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text font-semibold">Deskripsi Kejadian <span class="text-error">*</span></span>
-                    </label>
-                    <textarea name="description" 
-                              rows="5" 
-                              class="textarea textarea-bordered @error('description') textarea-error @enderror" 
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Deskripsi Kejadian <span class="text-red-500">*</span></label>
+                    <textarea name="description"
+                              rows="5"
+                              class="textarea w-full bg-base-200 @error('description') textarea-error @enderror"
                               placeholder="Jelaskan detail kejadian bencana yang terjadi..."
                               required>{{ old('description') }}</textarea>
-                    <label class="label">
-                        <span class="label-text-alt">Minimal 10 karakter</span>
-                    </label>
+                    <p class="text-xs text-gray-500">Minimal 10 karakter</p>
                     @error('description')
-                    <label class="label">
-                        <span class="label-text-alt text-error">{{ $message }}</span>
-                    </label>
+                        <p class="text-xs text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Lokasi Kejadian -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text font-semibold">Alamat Lengkap Lokasi <span class="text-error">*</span></span>
-                    </label>
-                    <textarea name="location_address" 
-                              rows="3" 
-                              class="textarea textarea-bordered @error('location_address') textarea-error @enderror" 
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Alamat Lengkap Lokasi <span class="text-red-500">*</span></label>
+                    <textarea name="location_address"
+                              rows="3"
+                              class="textarea w-full bg-base-200 @error('location_address') textarea-error @enderror"
                               placeholder="Contoh: Jl. Merdeka No. 10, RT 01/RW 02, Kelurahan Tanjung Sari, Kecamatan Medan Selayang, Kota Medan, Sumatera Utara"
                               required>{{ old('location_address') }}</textarea>
                     @error('location_address')
-                    <label class="label">
-                        <span class="label-text-alt text-error">{{ $message }}</span>
-                    </label>
+                        <p class="text-xs text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <!-- Tanggal & Waktu Kejadian -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text font-semibold">Tanggal & Waktu Kejadian <span class="text-error">*</span></span>
-                        </label>
-                        <input type="datetime-local" 
-                               name="incident_date" 
-                               class="input input-bordered @error('incident_date') input-error @enderror"
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-semibold">Tanggal & Waktu Kejadian <span class="text-red-500">*</span></label>
+                        <input type="datetime-local"
+                               name="incident_date"
+                               class="input w-full bg-base-200 @error('incident_date') input-error @enderror"
                                value="{{ old('incident_date', now()->format('Y-m-d\TH:i')) }}"
                                max="{{ now()->format('Y-m-d\TH:i') }}"
                                required>
                         @error('incident_date')
-                        <label class="label">
-                            <span class="label-text-alt text-error">{{ $message }}</span>
-                        </label>
+                            <p class="text-xs text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text font-semibold">Tingkat Urgensi <span class="text-error">*</span></span>
-                        </label>
-                        <select name="urgency_level" class="select select-bordered @error('urgency_level') select-error @enderror" required>
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-semibold">Tingkat Urgensi <span class="text-red-500">*</span></label>
+                        <select name="urgency_level" class="select w-full bg-base-200 @error('urgency_level') select-error @enderror" required>
                             <option value="low" {{ old('urgency_level') == 'low' ? 'selected' : '' }}>Rendah</option>
                             <option value="medium" {{ old('urgency_level', 'medium') == 'medium' ? 'selected' : '' }}>Sedang</option>
                             <option value="high" {{ old('urgency_level') == 'high' ? 'selected' : '' }}>Tinggi</option>
                             <option value="critical" {{ old('urgency_level') == 'critical' ? 'selected' : '' }}>Kritis</option>
                         </select>
                         @error('urgency_level')
-                        <label class="label">
-                            <span class="label-text-alt text-error">{{ $message }}</span>
-                        </label>
+                            <p class="text-xs text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
 
                 <!-- Jumlah Korban & Kerusakan -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text font-semibold">Jumlah Korban (Opsional)</span>
-                        </label>
-                        <input type="number" 
-                               name="victim_count" 
-                               class="input input-bordered @error('victim_count') input-error @enderror"
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-semibold">Jumlah Korban (Opsional)</label>
+                        <input type="number"
+                               name="victim_count"
+                               class="input w-full bg-base-200 @error('victim_count') input-error @enderror"
                                placeholder="0"
                                min="0"
                                value="{{ old('victim_count') }}">
                         @error('victim_count')
-                        <label class="label">
-                            <span class="label-text-alt text-error">{{ $message }}</span>
-                        </label>
+                            <p class="text-xs text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text font-semibold">Nomor HP yang Bisa Dihubungi <span class="text-error">*</span></span>
-                        </label>
-                        <input type="tel" 
-                               name="contact_phone" 
-                               class="input input-bordered @error('contact_phone') input-error @enderror"
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-semibold">Nomor HP yang Bisa Dihubungi <span class="text-red-500">*</span></label>
+                        <input type="tel"
+                               name="contact_phone"
+                               class="input w-full bg-base-200 @error('contact_phone') input-error @enderror"
                                placeholder="081234567890"
                                value="{{ old('contact_phone') }}"
                                required>
                         @error('contact_phone')
-                        <label class="label">
-                            <span class="label-text-alt text-error">{{ $message }}</span>
-                        </label>
+                            <p class="text-xs text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
 
                 <!-- Deskripsi Kerusakan -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text font-semibold">Deskripsi Kerusakan (Opsional)</span>
-                    </label>
-                    <textarea name="damage_description" 
-                              rows="3" 
-                              class="textarea textarea-bordered @error('damage_description') textarea-error @enderror" 
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Deskripsi Kerusakan (Opsional)</label>
+                    <textarea name="damage_description"
+                              rows="3"
+                              class="textarea w-full bg-base-200 @error('damage_description') textarea-error @enderror"
                               placeholder="Jelaskan kerusakan yang ditimbulkan (rumah, kendaraan, infrastruktur, dll)">{{ old('damage_description') }}</textarea>
                     @error('damage_description')
-                    <label class="label">
-                        <span class="label-text-alt text-error">{{ $message }}</span>
-                    </label>
+                        <p class="text-xs text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
 
                 <div class="divider"></div>
 
                 <!-- Upload Foto/Video -->
-                <div class="form-control">
-                    <label class="label">
-                        <span class="label-text font-semibold">Lampiran Foto/Video (Opsional)</span>
-                    </label>
-                    
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-semibold">Lampiran Foto/Video (Opsional)</label>
+
                     <div class="alert alert-info mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -183,24 +147,20 @@
                         </div>
                     </div>
 
-                    <input type="file" 
-                           name="attachments[]" 
-                           class="file-input file-input-bordered w-full @error('attachments') file-input-error @enderror"
+                    <input type="file"
+                           name="attachments[]"
+                           class="file-input w-full bg-base-200 @error('attachments') file-input-error @enderror"
                            accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,video/mp4,video/mpeg,video/quicktime,video/x-msvideo"
                            multiple
                            @change="handleFiles($event)"
                            x-ref="fileInput">
-                    
+
                     @error('attachments')
-                    <label class="label">
-                        <span class="label-text-alt text-error">{{ $message }}</span>
-                    </label>
+                        <p class="text-xs text-red-500">{{ $message }}</p>
                     @enderror
 
                     @error('attachments.*')
-                    <label class="label">
-                        <span class="label-text-alt text-error">{{ $message }}</span>
-                    </label>
+                        <p class="text-xs text-red-500">{{ $message }}</p>
                     @enderror
 
                     <!-- File Preview -->

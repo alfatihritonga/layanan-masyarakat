@@ -25,7 +25,7 @@ class UpdateDisasterTypeRequest extends FormRequest
                 Rule::unique('disaster_types', 'name')->ignore($disasterTypeId)
             ],
             'description' => 'nullable|string|max:500',
-            'icon' => 'nullable|string|max:100',
+            'icon_svg' => 'nullable|string',
             'color' => 'nullable|string|regex:/^#[0-9A-Fa-f]{6}$/',
         ];
     }
@@ -37,7 +37,6 @@ class UpdateDisasterTypeRequest extends FormRequest
             'name.max' => 'Nama maksimal 100 karakter',
             'name.unique' => 'Nama jenis bencana sudah ada',
             'description.max' => 'Deskripsi maksimal 500 karakter',
-            'icon.max' => 'Nama icon maksimal 100 karakter',
             'color.regex' => 'Format warna harus hex (contoh: #FF5733)',
         ];
     }

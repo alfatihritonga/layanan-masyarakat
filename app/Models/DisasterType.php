@@ -12,7 +12,7 @@ class DisasterType extends Model
     protected $fillable = [
         'name',
         'description',
-        'icon',
+        'icon_svg',
         'color',
     ];
 

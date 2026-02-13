@@ -60,9 +60,9 @@
 
                 <div class="space-y-3">
                     <div>
-                        <div class="text-sm font-semibold text-gray-500">Icon</div>
-                        @if($disasterType->icon)
-                            <div class="mt-1 font-mono text-sm">{{ $disasterType->icon }}</div>
+                        <div class="text-sm font-semibold text-gray-500">Icon SVG</div>
+                        @if($disasterType->icon_svg)
+                            <div class="mt-1 font-mono text-sm">{{ $disasterType->icon_svg }}</div>
                         @else
                             <div class="mt-1 text-gray-400">-</div>
                         @endif

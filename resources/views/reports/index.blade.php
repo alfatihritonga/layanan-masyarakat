@@ -65,23 +65,19 @@
             <form method="GET" action="{{ route('reports.index') }}">
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                     <!-- Search -->
-                    <div class="form-control md:col-span-2">
-                        <label class="label">
-                            <span class="label-text">Cari Laporan</span>
-                        </label>
-                        <input type="text" 
+                    <div class="flex flex-col gap-2 md:col-span-2">
+                        <label class="text-sm font-semibold">Cari Laporan</label>
+                        <input type="text"
                                name="search"
                                value="{{ $filters['search'] ?? '' }}"
-                               placeholder="Cari berdasarkan deskripsi, lokasi, atau nomor HP..." 
-                               class="input input-bordered">
+                               placeholder="Cari berdasarkan deskripsi, lokasi, atau nomor HP..."
+                               class="input w-full bg-base-200">
                     </div>
 
                     <!-- Status Filter -->
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text">Status</span>
-                        </label>
-                        <select name="status" class="select select-bordered">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-semibold">Status</label>
+                        <select name="status" class="select w-full bg-base-200">
                             <option value="">Semua Status</option>
                             <option value="pending" {{ ($filters['status'] ?? '') == 'pending' ? 'selected' : '' }}>Pending</option>
                             <option value="verified" {{ ($filters['status'] ?? '') == 'verified' ? 'selected' : '' }}>Terverifikasi</option>
@@ -92,11 +88,9 @@
                     </div>
 
                     <!-- Disaster Type Filter -->
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text">Jenis Bencana</span>
-                        </label>
-                        <select name="disaster_type_id" class="select select-bordered">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-semibold">Jenis Bencana</label>
+                        <select name="disaster_type_id" class="select w-full bg-base-200">
                             <option value="">Semua Jenis</option>
                             @foreach($disasterTypes as $type)
                             <option value="{{ $type->id }}" {{ ($filters['disaster_type_id'] ?? '') == $type->id ? 'selected' : '' }}>
@@ -107,11 +101,9 @@
                     </div>
 
                     <!-- Urgency Filter -->
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text">Urgensi</span>
-                        </label>
-                        <select name="urgency_level" class="select select-bordered">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-semibold">Urgensi</label>
+                        <select name="urgency_level" class="select w-full bg-base-200">
                             <option value="">Semua Urgensi</option>
                             <option value="critical" {{ ($filters['urgency_level'] ?? '') == 'critical' ? 'selected' : '' }}>Kritis</option>
                             <option value="high" {{ ($filters['urgency_level'] ?? '') == 'high' ? 'selected' : '' }}>Tinggi</option>
@@ -125,31 +117,25 @@
                 <div x-data="{ show: {{ !empty($filters['date_from']) || !empty($filters['date_to']) ? 'true' : 'false' }} }">
                     <div x-show="show" x-collapse class="mt-4 pt-4 border-t">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="form-control">
-                                <label class="label">
-                                    <span class="label-text">Tanggal Dari</span>
-                                </label>
-                                <input type="date" 
-                                       name="date_from" 
+                            <div class="flex flex-col gap-2">
+                                <label class="text-sm font-semibold">Tanggal Dari</label>
+                                <input type="date"
+                                       name="date_from"
                                        value="{{ $filters['date_from'] ?? '' }}"
-                                       class="input input-bordered">
+                                       class="input w-full bg-base-200">
                             </div>
 
-                            <div class="form-control">
-                                <label class="label">
-                                    <span class="label-text">Tanggal Sampai</span>
-                                </label>
-                                <input type="date" 
-                                       name="date_to" 
+                            <div class="flex flex-col gap-2">
+                                <label class="text-sm font-semibold">Tanggal Sampai</label>
+                                <input type="date"
+                                       name="date_to"
                                        value="{{ $filters['date_to'] ?? '' }}"
-                                       class="input input-bordered">
+                                       class="input w-full bg-base-200">
                             </div>
 
-                            <div class="form-control">
-                                <label class="label">
-                                    <span class="label-text">Urutkan</span>
-                                </label>
-                                <select name="sort_by" class="select select-bordered">
+                            <div class="flex flex-col gap-2">
+                                <label class="text-sm font-semibold">Urutkan</label>
+                                <select name="sort_by" class="select w-full bg-base-200">
                                     <option value="created_at" {{ ($filters['sort_by'] ?? 'created_at') == 'created_at' ? 'selected' : '' }}>Tanggal Dibuat</option>
                                     <option value="incident_date" {{ ($filters['sort_by'] ?? '') == 'incident_date' ? 'selected' : '' }}>Tanggal Kejadian</option>
                                     <option value="urgency_level" {{ ($filters['sort_by'] ?? '') == 'urgency_level' ? 'selected' : '' }}>Urgensi</option>
@@ -281,11 +267,9 @@
                                 <form method="POST" action="{{ route('reports.verify', $report->id) }}">
                                     @csrf
                                     <div class="py-4 space-y-4">
-                                        <div class="form-control">
-                                            <label class="label">
-                                                <span class="label-text">Tingkat Urgensi</span>
-                                            </label>
-                                            <select name="urgency_level" class="select select-bordered">
+                                        <div class="flex flex-col gap-2">
+                                            <label class="text-sm font-semibold">Tingkat Urgensi</label>
+                                            <select name="urgency_level" class="select w-full bg-base-200">
                                                 <option value="">Tidak Diubah</option>
                                                 <option value="low">Rendah</option>
                                                 <option value="medium">Sedang</option>
@@ -293,15 +277,13 @@
                                                 <option value="critical">Kritis</option>
                                             </select>
                                         </div>
-                                        <div class="form-control">
-                                            <label class="label">
-                                                <span class="label-text">Catatan Admin (Opsional)</span>
-                                            </label>
-                                            <textarea name="admin_notes" rows="3" class="textarea textarea-bordered" placeholder="Catatan verifikasi..."></textarea>
+                                        <div class="flex flex-col gap-2">
+                                            <label class="text-sm font-semibold">Catatan Admin (Opsional)</label>
+                                            <textarea name="admin_notes" rows="3" class="textarea w-full bg-base-200" placeholder="Catatan verifikasi..."></textarea>
                                         </div>
                                     </div>
                                     <div class="modal-action">
-                                        <button type="button" class="btn" onclick="verifyModal_{{ $report->id }}.close()">Batal</button>
+                                        <button type="button" class="btn btn-ghost" onclick="verifyModal_{{ $report->id }}.close()">Batal</button>
                                         <button type="submit" class="btn btn-success">Verifikasi</button>
                                     </div>
                                 </form>
@@ -318,15 +300,13 @@
                                 <form method="POST" action="{{ route('reports.reject', $report->id) }}">
                                     @csrf
                                     <div class="py-4">
-                                        <div class="form-control">
-                                            <label class="label">
-                                                <span class="label-text">Alasan Penolakan <span class="text-error">*</span></span>
-                                            </label>
-                                            <textarea name="rejection_reason" rows="4" class="textarea textarea-bordered" placeholder="Jelaskan alasan penolakan..." required></textarea>
+                                        <div class="flex flex-col gap-2">
+                                            <label class="text-sm font-semibold">Alasan Penolakan <span class="text-red-500">*</span></label>
+                                            <textarea name="rejection_reason" rows="4" class="textarea w-full bg-base-200" placeholder="Jelaskan alasan penolakan..." required></textarea>
                                         </div>
                                     </div>
                                     <div class="modal-action">
-                                        <button type="button" class="btn" onclick="rejectModal_{{ $report->id }}.close()">Batal</button>
+                                        <button type="button" class="btn btn-ghost" onclick="rejectModal_{{ $report->id }}.close()">Batal</button>
                                         <button type="submit" class="btn btn-error">Tolak Laporan</button>
                                     </div>
                                 </form>

@@ -13,61 +13,61 @@ class DisasterTypeSeeder extends Seeder
             [
                 'name' => 'Banjir',
                 'description' => 'Bencana akibat luapan air yang menutupi daratan',
-                'icon' => 'flood',
+                'icon_svg' => null,
                 'color' => '#3B82F6', // blue
             ],
             [
                 'name' => 'Gempa Bumi',
                 'description' => 'Getaran atau guncangan yang terjadi di permukaan bumi',
-                'icon' => 'earthquake',
+                'icon_svg' => null,
                 'color' => '#EF4444', // red
             ],
             [
                 'name' => 'Kebakaran',
                 'description' => 'Bencana yang disebabkan oleh api yang tidak terkendali',
-                'icon' => 'fire',
+                'icon_svg' => null,
                 'color' => '#F59E0B', // orange
             ],
             [
                 'name' => 'Tanah Longsor',
                 'description' => 'Perpindahan material pembentuk lereng berupa batuan, tanah, atau material campuran',
-                'icon' => 'landslide',
+                'icon_svg' => null,
                 'color' => '#92400E', // brown
             ],
             [
                 'name' => 'Tsunami',
                 'description' => 'Gelombang laut yang sangat besar akibat gempa atau letusan gunung berapi',
-                'icon' => 'tsunami',
+                'icon_svg' => null,
                 'color' => '#06B6D4', // cyan
             ],
             [
                 'name' => 'Gunung Meletus',
                 'description' => 'Letusan gunung berapi yang mengeluarkan material vulkanik',
-                'icon' => 'volcano',
+                'icon_svg' => null,
                 'color' => '#DC2626', // dark red
             ],
             [
                 'name' => 'Angin Puting Beliung',
                 'description' => 'Angin kencang yang berputar dengan kecepatan tinggi',
-                'icon' => 'tornado',
+                'icon_svg' => null,
                 'color' => '#6B7280', // gray
             ],
             [
                 'name' => 'Kekeringan',
                 'description' => 'Kekurangan pasokan air dalam waktu yang cukup lama',
-                'icon' => 'drought',
+                'icon_svg' => null,
                 'color' => '#D97706', // amber
             ],
             [
                 'name' => 'Bencana Industri',
                 'description' => 'Kecelakaan atau kebocoran bahan berbahaya di area industri',
-                'icon' => 'industry',
+                'icon_svg' => null,
                 'color' => '#7C3AED', // purple
             ],
             [
                 'name' => 'Wabah Penyakit',
                 'description' => 'Penyebaran penyakit menular dalam skala luas',
-                'icon' => 'epidemic',
+                'icon_svg' => null,
                 'color' => '#10B981', // green
             ],
         ];
