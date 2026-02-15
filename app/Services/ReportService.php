@@ -330,6 +330,12 @@ class ReportService
                 return false;
             }
 
+            $activeAssignments = $report->assignments()->active()->count();
+
+            if ($activeAssignments > 0) {
+                throw new \Exception('Report has active assignments');
+            }
+
             // Log status change
             $this->logHistory($report->id, $adminId, 'status', $report->status, 'resolved', $notes ?? 'Laporan telah selesai ditangani');
 

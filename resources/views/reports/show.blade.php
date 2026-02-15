@@ -279,7 +279,7 @@
                                     <span class="badge {{ $assignment->isCompleted() ? 'badge-success' : 'badge-primary' }}">
                                         {{ ucfirst(str_replace('_', ' ', $assignment->status)) }}
                                     </span>
-                                    @if(!$assignment->isCompleted() && !$assignment->status === 'cancelled')
+                                    @if(!$assignment->isCompleted() && $assignment->status != 'cancelled')
                                     <div class="dropdown dropdown-end">
                                         <label tabindex="0" class="btn btn-ghost btn-sm btn-square">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -289,34 +289,40 @@
                                         <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                                             @if($assignment->status === 'assigned')
                                             <li>
-                                                <form method="POST" action="{{ route('reports.updateAssignmentStatus', [$report->id, $assignment->id]) }}">
+                                                <button type="submit" form="assignment-status-{{ $assignment->id }}-on_the_way" class="w-full text-left">
+                                                    Dalam Perjalanan
+                                                </button>
+                                                <form id="assignment-status-{{ $assignment->id }}-on_the_way" method="POST" action="{{ route('reports.updateAssignmentStatus', [$report->id, $assignment->id]) }}" class="hidden">
                                                     @csrf
                                                     <input type="hidden" name="status" value="on_the_way">
-                                                    <button type="submit">Dalam Perjalanan</button>
                                                 </form>
                                             </li>
                                             @endif
                                             @if($assignment->status === 'on_the_way')
                                             <li>
-                                                <form method="POST" action="{{ route('reports.updateAssignmentStatus', [$report->id, $assignment->id]) }}">
+                                                <button type="submit" form="assignment-status-{{ $assignment->id }}-on_site" class="w-full text-left">
+                                                    Tiba di Lokasi
+                                                </button>
+                                                <form id="assignment-status-{{ $assignment->id }}-on_site" method="POST" action="{{ route('reports.updateAssignmentStatus', [$report->id, $assignment->id]) }}" class="hidden">
                                                     @csrf
                                                     <input type="hidden" name="status" value="on_site">
-                                                    <button type="submit">Tiba di Lokasi</button>
                                                 </form>
                                             </li>
                                             @endif
                                             @if($assignment->status === 'on_site')
                                             <li>
-                                                <button onclick="complete_assignment_{{ $assignment->id }}.showModal()">
+                                                <button onclick="complete_assignment_{{ $assignment->id }}.showModal()" class="w-full text-left">
                                                     Selesai
                                                 </button>
                                             </li>
                                             @endif
                                             <li>
-                                                <form method="POST" action="{{ route('reports.updateAssignmentStatus', [$report->id, $assignment->id]) }}">
+                                                <button type="submit" form="assignment-status-{{ $assignment->id }}-cancelled" class="w-full text-left text-error">
+                                                    Batalkan
+                                                </button>
+                                                <form id="assignment-status-{{ $assignment->id }}-cancelled" method="POST" action="{{ route('reports.updateAssignmentStatus', [$report->id, $assignment->id]) }}" class="hidden">
                                                     @csrf
                                                     <input type="hidden" name="status" value="cancelled">
-                                                    <button type="submit" class="text-error">Batalkan</button>
                                                 </form>
                                             </li>
                                         </ul>

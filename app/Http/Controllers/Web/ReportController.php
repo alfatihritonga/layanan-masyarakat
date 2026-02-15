@@ -58,7 +58,7 @@ class ReportController extends Controller
 
         $availableRelawan = $this->relawanService->getAll()->where('status_ketersediaan', 'available');
         $comments = $this->commentService->getByReport($id, true); // include internal
-
+// return $report;
         return view('reports.show', compact('report', 'availableRelawan', 'comments'));
     }
 
@@ -196,19 +196,31 @@ class ReportController extends Controller
      */
     public function resolve(Request $request, int $id)
     {
-        $resolved = $this->reportService->markAsResolved(
-            $id,
-            auth()->id(),
-            $request->input('notes')
-        );
+        try {
+            $resolved = $this->reportService->markAsResolved(
+                $id,
+                auth()->id(),
+                $request->input('notes')
+            );
 
-        if (!$resolved) {
-            abort(404, 'Laporan tidak ditemukan');
+            if (!$resolved) {
+                abort(404, 'Laporan tidak ditemukan');
+            }
+
+            return redirect()
+                ->route('reports.show', $id)
+                ->with('success', 'Laporan berhasil diselesaikan');
+        } catch (\Exception $e) {
+            if ($e->getMessage() === 'Report has active assignments') {
+                return redirect()
+                    ->route('reports.show', $id)
+                    ->with('error', 'Tidak dapat menyelesaikan laporan karena masih ada penugasan aktif');
+            }
+
+            return redirect()
+                ->route('reports.show', $id)
+                ->with('error', 'Gagal menyelesaikan laporan: ' . $e->getMessage());
         }
-
-        return redirect()
-            ->route('reports.show', $id)
-            ->with('success', 'Laporan berhasil diselesaikan');
     }
 
     /**

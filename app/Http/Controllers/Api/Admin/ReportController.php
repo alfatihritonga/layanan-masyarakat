@@ -163,22 +163,30 @@ class ReportController extends Controller
      */
     public function resolve(Request $request, int $id): JsonResponse
     {
-        $resolved = $this->reportService->markAsResolved(
-            $id,
-            $request->user()->id,
-            $request->input('notes')
-        );
+        try {
+            $resolved = $this->reportService->markAsResolved(
+                $id,
+                $request->user()->id,
+                $request->input('notes')
+            );
 
-        if (!$resolved) {
-            return $this->notFoundResponse('Laporan tidak ditemukan');
+            if (!$resolved) {
+                return $this->notFoundResponse('Laporan tidak ditemukan');
+            }
+
+            $report = $this->reportService->findById($id);
+
+            return $this->resourceResponse(
+                new ReportResource($report),
+                'Laporan berhasil diselesaikan'
+            );
+        } catch (\Exception $e) {
+            if ($e->getMessage() === 'Report has active assignments') {
+                return $this->errorResponse('Tidak dapat menyelesaikan laporan karena masih ada penugasan aktif', 422);
+            }
+
+            return $this->errorResponse('Gagal menyelesaikan laporan: ' . $e->getMessage(), 500);
         }
-
-        $report = $this->reportService->findById($id);
-
-        return $this->resourceResponse(
-            new ReportResource($report),
-            'Laporan berhasil diselesaikan'
-        );
     }
 
     /**
